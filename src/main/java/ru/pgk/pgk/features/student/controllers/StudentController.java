@@ -1,0 +1,74 @@
+package ru.pgk.pgk.features.student.controllers;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import ru.pgk.pgk.features.student.dto.StudentDetailsDto;
+import ru.pgk.pgk.features.student.dto.StudentDto;
+import ru.pgk.pgk.features.student.dto.params.AddStudentParams;
+import ru.pgk.pgk.features.student.mapper.StudentDetailsMapper;
+import ru.pgk.pgk.features.student.mapper.StudentMapper;
+import ru.pgk.pgk.features.student.services.StudentService;
+
+@RestController
+@RequestMapping("students")
+@RequiredArgsConstructor
+public class StudentController {
+
+    private final StudentService studentService;
+
+    private final StudentMapper studentMapper;
+    private final StudentDetailsMapper studentDetailsMapper;
+
+    @GetMapping("/by-telegram-id/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    private StudentDetailsDto getByTelegramId(
+            @PathVariable Long id
+    ) {
+        return studentDetailsMapper.toDto(studentService.getByTelegramId(id));
+    }
+
+    @GetMapping("/by-alice-id/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    private StudentDetailsDto getByAliceId(
+            @PathVariable String id
+    ) {
+        return studentDetailsMapper.toDto(studentService.getByAliceId(id));
+    }
+
+    @PostMapping("/alice/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    private StudentDto add(
+            @PathVariable String id,
+            @RequestBody AddStudentParams params
+    ) {
+        return studentMapper.toDto(studentService.add(id, params));
+    }
+
+    @PostMapping("/telegram/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    private StudentDto add(
+            @PathVariable Long id,
+            @RequestBody AddStudentParams params
+    ) {
+        return studentMapper.toDto(studentService.add(id, params));
+    }
+
+    @PatchMapping("by-telegram-id/{id}/group-name")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void updateGroupName(
+            @PathVariable Long id,
+            @RequestParam String name
+    ) {
+        studentService.updateGroupName(id, name);
+    }
+
+    @PatchMapping("/by-alice-id/{id}/group-name")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void updateGroupName(
+            @PathVariable String id,
+            @RequestParam String name
+    ) {
+        studentService.updateGroupName(id, name);
+    }
+}
