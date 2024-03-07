@@ -13,4 +13,7 @@ public interface UserService {
     Boolean existByTelegramId(Long id);
 
     Boolean existByAliceId(String id);
+
+    void deleteByTelegramId(Long id);
+    void deleteByAliceId(String id);
 }

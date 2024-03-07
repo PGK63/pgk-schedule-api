@@ -27,4 +27,20 @@ public class UserController {
     ) {
         return userService.existByAliceId(id);
     }
+
+    @DeleteMapping("/by-telegram-id/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void deleteByTelegramId(
+        @PathVariable Long id
+    ) {
+        userService.deleteByTelegramId(id);
+    }
+
+    @DeleteMapping("/by-alice-id/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void deleteByAliceId(
+            @PathVariable String id
+    ) {
+        userService.deleteByAliceId(id);
+    }
 }

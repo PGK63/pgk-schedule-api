@@ -1,7 +1,9 @@
 package ru.pgk.pgk.features.user.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
@@ -61,5 +63,33 @@ public class UserServiceImpl implements UserService{
         }catch (ResourceNotFoundException ignore) {
             return false;
         }
+    }
+
+    @Override
+    @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "UserService::getByTelegramId", key = "#id"),
+                    @CacheEvict(cacheNames = "UserService::existByTelegramId", key = "#id"),
+                    @CacheEvict(cacheNames = "StudentService::getByTelegramId", key = "#id"),
+                    @CacheEvict(cacheNames = "TeacherService::getByTelegramId", key = "#id")
+            }
+    )
+    public void deleteByTelegramId(Long id) {
+        userRepository.deleteByTelegramId(id);
+    }
+
+    @Override
+    @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "UserService::getByAliceId", key = "#id"),
+                    @CacheEvict(cacheNames = "UserService::existByAliceId", key = "#id"),
+                    @CacheEvict(cacheNames = "StudentService::getByAliceId", key = "#id"),
+                    @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id")
+            }
+    )
+    public void deleteByAliceId(String id) {
+        userRepository.deleteByAliceId(id);
     }
 }

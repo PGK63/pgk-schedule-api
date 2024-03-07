@@ -10,4 +10,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByTelegramId(Long telegramId);
 
     Optional<UserEntity> findByAliceId(String aliceId);
+
+    void deleteByTelegramId(Long id);
+    void deleteByAliceId(String id);
 }

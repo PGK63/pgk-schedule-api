@@ -1,10 +1,9 @@
 package ru.pgk.pgk.features.user.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+import ru.pgk.pgk.features.student.entities.StudentEntity;
+import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 
 import java.io.Serializable;
 
@@ -18,4 +17,10 @@ public class UserEntity implements Serializable {
 
     private Long telegramId;
     private String aliceId;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private TeacherEntity teacher;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private StudentEntity student;
 }
