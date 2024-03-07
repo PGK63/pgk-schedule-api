@@ -5,9 +5,11 @@ import lombok.Data;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 
+import java.io.Serializable;
+
 @Data
 @Entity(name = "students")
-public class StudentEntity {
+public class StudentEntity implements Serializable {
 
     @Id
     private Integer id;

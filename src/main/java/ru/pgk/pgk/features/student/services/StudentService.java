@@ -13,6 +13,6 @@ public interface StudentService {
     StudentEntity add(String aliceId, AddStudentParams params);
 
     void updateGroupName(Integer id, String groupName);
-    void updateGroupName(Long telegramId, String groupName);
+    StudentEntity updateGroupName(Long telegramId, String groupName);
     void updateGroupName(String aliceId, String groupName);
 }
