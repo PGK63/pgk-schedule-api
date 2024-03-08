@@ -8,7 +8,10 @@ import ru.pgk.pgk.features.teacher.dto.TeacherDto;
 import ru.pgk.pgk.features.teacher.dto.params.AddTeacherParams;
 import ru.pgk.pgk.features.teacher.mappers.TeacherDetailsMapper;
 import ru.pgk.pgk.features.teacher.mappers.TeacherMapper;
+import ru.pgk.pgk.features.teacher.repositoties.TeacherRepository;
 import ru.pgk.pgk.features.teacher.service.TeacherService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("teachers")
@@ -19,6 +22,13 @@ public class TeacherController {
 
     private final TeacherMapper teacherMapper;
     private final TeacherDetailsMapper teacherDetailsMapper;
+
+    private final TeacherRepository teacherRepository;
+
+    @GetMapping
+    private List<TeacherDto> getAll() {
+        return teacherMapper.toDto(teacherRepository.findAll());
+    }
 
     @GetMapping("/by-telegram-id/{id}")
     @ResponseStatus(HttpStatus.OK)

@@ -24,4 +24,8 @@ public class TeacherEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private DepartmentEntity department;
+
+    public String getFIO() {
+        return lastName + " " + firstName.charAt(0) + ".";
+    }
 }
