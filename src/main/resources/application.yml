@@ -1,5 +1,8 @@
 server:
   port: 10025
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /pgk/schedule
 spring:
   datasource:
     url: jdbc:postgresql://danbel.ru:5432/pgk-schedule
