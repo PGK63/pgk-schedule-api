@@ -1,5 +1,6 @@
 package ru.pgk.pgk.features.schedule.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -162,10 +163,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 16 * * *")
+    @Scheduled(cron = "0 10 16 * * *")
     public void parseJsonAddDatabase() {
-        Schedule schedule = parseJsonScript(true);
-        add(schedule, (short) 1);
+        List<DepartmentEntity> departments = departmentService.getAll();
+        for(DepartmentEntity department : departments) {
+            List<Schedule> schedules = parseJsonScript(true, department.getId());
+            for(Schedule schedule : schedules)
+                add(schedule, (short) 1);
+        }
     }
 
     @Transactional
@@ -180,17 +185,21 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
     )
     public void parseJsonUpdateDatabase() {
-        Schedule schedule = parseJsonScript(false);
-        updateRowsByDepartmentAndDate((short) 1, schedule.date(), schedule.rows());
+        List<DepartmentEntity> departments = departmentService.getAll();
+        for(DepartmentEntity department : departments) {
+            List<Schedule> schedules = parseJsonScript(false, department.getId());
+            for(Schedule schedule : schedules)
+                updateRowsByDepartmentAndDate((short) 1, schedule.date(), schedule.rows());
+        }
     }
 
     @SneakyThrows
-    public Schedule parseJsonScript(Boolean nextDate) {
+    public List<Schedule> parseJsonScript(Boolean nextDate, Short departmentId) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(scriptUrl + "?next_date=" + nextDate))
+                .uri(URI.create(scriptUrl + "?next_date=" + nextDate + "$department_id=" + departmentId))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return objectMapper.readValue(response.body(), Schedule.class);
+        return objectMapper.readValue(response.body(), new TypeReference<>() {});
     }
 }

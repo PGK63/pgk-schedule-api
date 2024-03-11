@@ -31,5 +31,4 @@ public class UserRoleServiceImpl implements UserRoleService {
         throw new ResourceNotFoundException("User not found");
     }
 
-
 }

@@ -81,8 +81,7 @@ public class UserServiceImpl implements UserService{
                     @CacheEvict(cacheNames = "UserService::getByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "UserService::existByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "StudentService::getByAliceId", key = "#id"),
-                    @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id"),
-                    @CacheEvict(cacheNames = "UserRoleService::getRoleByTelegramId", key = "#id")
+                    @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id")
             }
     )
     public void deleteByAliceId(String id) {
