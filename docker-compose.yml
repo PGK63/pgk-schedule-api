@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: pgk-schedule-api
+    ports:
+      - '10025:10025'
