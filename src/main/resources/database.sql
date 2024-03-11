@@ -57,3 +57,15 @@ CREATE TABLE teachers
     CONSTRAINT FK__teachers__user_id FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT FK__teachers__department_id  FOREIGN KEY(department_id) REFERENCES departments(id)
 );
+
+CREATE TABLE schedules
+(
+    id int generated always as identity,
+    date date not null,
+    department_id smallint not null,
+    rows jsonb not null,
+
+    CONSTRAINT PK__schedules__key PRIMARY KEY(id),
+    CONSTRAINT FK__schedules__department_id  FOREIGN KEY(department_id) REFERENCES departments(id),
+    CONSTRAINT UN__schedules__date_department_id UNIQUE(date, department_id)
+);

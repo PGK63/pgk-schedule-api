@@ -2,6 +2,7 @@ package ru.pgk.pgk.features.department.entitites;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import ru.pgk.pgk.features.schedule.entities.ScheduleEntity;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 
@@ -23,4 +24,7 @@ public class DepartmentEntity implements Serializable {
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Collection<TeacherEntity> teachers;
+
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    private Collection<ScheduleEntity> schedules;
 }

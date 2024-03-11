@@ -3,7 +3,9 @@ package ru.pgk.pgk.features.user.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.services.UserService;
+import ru.pgk.pgk.features.user.services.role.UserRoleService;
 
 @RestController
 @RequestMapping("users")
@@ -11,6 +13,7 @@ import ru.pgk.pgk.features.user.services.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final UserRoleService userRoleService;
 
     @GetMapping("/by-telegram-id/{id}/exist")
     @ResponseStatus(HttpStatus.OK)
@@ -26,6 +29,14 @@ public class UserController {
             @PathVariable String id
     ) {
         return userService.existByAliceId(id);
+    }
+
+    @GetMapping("/role/by-telegram-id/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    private UserEntity.Role getRoleByTelegramId(
+            @PathVariable Long id
+    ) {
+        return userRoleService.getRoleByTelegramId(id);
     }
 
     @DeleteMapping("/by-telegram-id/{id}")

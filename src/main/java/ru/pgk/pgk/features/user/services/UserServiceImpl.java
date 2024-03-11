@@ -12,6 +12,8 @@ import ru.pgk.pgk.features.user.repositoties.UserRepository;
 
 import java.util.function.Supplier;
 
+import static ru.pgk.pgk.common.extensions.BaseExtensions.exist;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -56,14 +58,6 @@ public class UserServiceImpl implements UserService{
         return exist(() -> getByAliceId(id));
     }
 
-    private Boolean exist(Supplier<?> exceptionSupplier) {
-        try {
-            exceptionSupplier.get();
-            return true;
-        }catch (ResourceNotFoundException ignore) {
-            return false;
-        }
-    }
 
     @Override
     @Transactional
@@ -72,7 +66,8 @@ public class UserServiceImpl implements UserService{
                     @CacheEvict(cacheNames = "UserService::getByTelegramId", key = "#id"),
                     @CacheEvict(cacheNames = "UserService::existByTelegramId", key = "#id"),
                     @CacheEvict(cacheNames = "StudentService::getByTelegramId", key = "#id"),
-                    @CacheEvict(cacheNames = "TeacherService::getByTelegramId", key = "#id")
+                    @CacheEvict(cacheNames = "TeacherService::getByTelegramId", key = "#id"),
+                    @CacheEvict(cacheNames = "UserRoleService::getRoleByTelegramId", key = "#id")
             }
     )
     public void deleteByTelegramId(Long id) {
@@ -86,7 +81,8 @@ public class UserServiceImpl implements UserService{
                     @CacheEvict(cacheNames = "UserService::getByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "UserService::existByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "StudentService::getByAliceId", key = "#id"),
-                    @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id")
+                    @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id"),
+                    @CacheEvict(cacheNames = "UserRoleService::getRoleByTelegramId", key = "#id")
             }
     )
     public void deleteByAliceId(String id) {

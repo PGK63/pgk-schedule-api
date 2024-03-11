@@ -18,4 +18,9 @@ public class UserEntity implements Serializable {
 
     private Long telegramId;
     private String aliceId;
+
+    public static enum Role {
+        STUDENT,
+        TEACHER;
+    }
 }

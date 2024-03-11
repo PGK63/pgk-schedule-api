@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dmads.ru:5432/pgk-schedule
+    url: jdbc:postgresql://danbel.ru:5432/pgk-schedule
     username: postgres
     password: danbelZzAa6190
   cache:
@@ -8,6 +8,6 @@ spring:
     cache-names: redis-cache
   data:
     redis:
-      host: localhost
+      host: danbel.ru
       port: 6379
-      password: ggtt1234
+      password: ggtt1234redis
