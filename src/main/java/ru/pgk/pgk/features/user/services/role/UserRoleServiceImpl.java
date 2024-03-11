@@ -24,9 +24,9 @@ public class UserRoleServiceImpl implements UserRoleService {
     public UserEntity.Role getRoleByTelegramId(Long telegramId) {
 
         if(exist(() -> studentService.getByTelegramId(telegramId)))
-            return UserEntity.Role.TEACHER;
-        else if(exist(() -> teacherService.getByTelegramId(telegramId)))
             return UserEntity.Role.STUDENT;
+        else if(exist(() -> teacherService.getByTelegramId(telegramId)))
+            return UserEntity.Role.TEACHER;
 
         throw new ResourceNotFoundException("User not found");
     }
