@@ -3,7 +3,11 @@ package ru.pgk.pgk.features.student.services;
 import ru.pgk.pgk.features.student.dto.params.AddStudentParams;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 
+import java.util.List;
+
 public interface StudentService {
+
+    List<StudentEntity> getAll(Short departmentId);
 
     StudentEntity getById(Integer id);
     StudentEntity getByTelegramId(Long id);

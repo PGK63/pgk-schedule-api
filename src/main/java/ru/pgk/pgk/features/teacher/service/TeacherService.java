@@ -3,7 +3,11 @@ package ru.pgk.pgk.features.teacher.service;
 import ru.pgk.pgk.features.teacher.dto.params.AddTeacherParams;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 
+import java.util.List;
+
 public interface TeacherService {
+
+    List<TeacherEntity> getAll(Short departmentId);
 
     TeacherEntity getById(Integer id);
     TeacherEntity getByTelegramId(Long id);

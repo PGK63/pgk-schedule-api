@@ -16,6 +16,8 @@ import ru.pgk.pgk.features.teacher.repositoties.TeacherRepository;
 import ru.pgk.pgk.features.teacher.service.cache.TeacherCacheService;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
@@ -24,6 +26,12 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final DepartmentService departmentService;
     private final TeacherCacheService teacherCacheService;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TeacherEntity> getAll(Short departmentId) {
+        return teacherRepository.getAllByDepartmentId(departmentId);
+    }
 
     @Override
     @Transactional(readOnly = true)

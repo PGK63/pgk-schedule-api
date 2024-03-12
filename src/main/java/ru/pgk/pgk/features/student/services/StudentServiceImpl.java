@@ -16,6 +16,8 @@ import ru.pgk.pgk.features.student.repositoties.StudentRepository;
 import ru.pgk.pgk.features.student.services.cache.StudentCacheService;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
@@ -24,6 +26,12 @@ public class StudentServiceImpl implements StudentService {
     private final StudentCacheService studentCacheService;
 
     private final StudentRepository studentRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentEntity> getAll(Short departmentId) {
+        return studentRepository.findAllByDepartmentId(departmentId);
+    }
 
     @Override
     @Transactional(readOnly = true)

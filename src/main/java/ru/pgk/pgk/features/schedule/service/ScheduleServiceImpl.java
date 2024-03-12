@@ -1,17 +1,8 @@
 package ru.pgk.pgk.features.schedule.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
@@ -30,10 +21,6 @@ import ru.pgk.pgk.features.student.services.StudentService;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import ru.pgk.pgk.features.teacher.service.TeacherService;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,15 +37,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final TeacherService teacherService;
     private final DepartmentService departmentService;
 
-    private final String scriptUrl = "http://api.danbel.ru/pgk/schedule/script";
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    @PostConstruct
-    private void init() {
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    }
-
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getAll")
@@ -74,8 +52,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         return getByGroupName(scheduleId, student.getGroupName());
     }
 
+    @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::getByGroupName", key = "#name")
+    @Cacheable(cacheNames = "ScheduleService::getByGroupName", key = "#scheduleId-#name")
     public ScheduleStudentResponse getByGroupName(Integer scheduleId, String name) {
         ScheduleEntity schedule = getById(scheduleId);
         Optional<ScheduleRow> optionalRow = schedule.getRows().stream()
@@ -99,8 +78,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         return getByTeacher(scheduleId, teacher);
     }
 
+    @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::getByTeacher", key = "#teacher.id")
+    @Cacheable(cacheNames = "ScheduleService::getByTeacher", key = "#scheduleId-#teacher.id")
     public ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherEntity teacher) {
        ScheduleEntity schedule = getById(scheduleId);
        List<ScheduleTeacherColumnDto> teacherColumns = new ArrayList<>();
@@ -138,6 +118,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
     }
 
+    @Override
     @Transactional
     @CachePut(cacheNames = "ScheduleService::getById", key = "#result.id")
     public ScheduleEntity add(Schedule schedule, Short departmentId) {
@@ -149,6 +130,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.save(scheduleEntity);
     }
 
+    @Override
     @Transactional(readOnly = true)
     @CachePut(cacheNames = "ScheduleService::getById", key = "#result.id")
     public ScheduleEntity updateRowsByDepartmentAndDate(
@@ -160,46 +142,5 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
         schedule.setRows(rows);
         return scheduleRepository.save(schedule);
-    }
-
-    @Transactional
-    @Scheduled(cron = "0 10 16 * * *")
-    public void parseJsonAddDatabase() {
-        List<DepartmentEntity> departments = departmentService.getAll();
-        for(DepartmentEntity department : departments) {
-            List<Schedule> schedules = parseJsonScript(true, department.getId());
-            for(Schedule schedule : schedules)
-                add(schedule, (short) 1);
-        }
-    }
-
-    @Transactional
-    @Scheduled(cron = "0 0 8 * * *")
-    @Caching(
-            evict = {
-                    @CacheEvict(cacheNames = "ScheduleService::getAll"),
-                    @CacheEvict(cacheNames = "ScheduleService::getByTeacher", allEntries = true),
-                    @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true),
-                    @CacheEvict(cacheNames = "ScheduleService::getByGroupName", allEntries = true),
-                    @CacheEvict(cacheNames = "ScheduleService::studentGetById", allEntries = true)
-            }
-    )
-    public void parseJsonUpdateDatabase() {
-        List<DepartmentEntity> departments = departmentService.getAll();
-        for(DepartmentEntity department : departments) {
-            List<Schedule> schedules = parseJsonScript(false, department.getId());
-            for(Schedule schedule : schedules)
-                updateRowsByDepartmentAndDate((short) 1, schedule.date(), schedule.rows());
-        }
-    }
-
-    @SneakyThrows
-    public List<Schedule> parseJsonScript(Boolean nextDate, Short departmentId) {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(scriptUrl + "?next_date=" + nextDate + "$department_id=" + departmentId))
-                .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return objectMapper.readValue(response.body(), new TypeReference<>() {});
     }
 }
