@@ -10,8 +10,6 @@ import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.repositoties.UserRepository;
 
-import java.util.function.Supplier;
-
 import static ru.pgk.pgk.common.extensions.BaseExtensions.exist;
 
 @Service
@@ -67,7 +65,9 @@ public class UserServiceImpl implements UserService{
                     @CacheEvict(cacheNames = "UserService::existByTelegramId", key = "#id"),
                     @CacheEvict(cacheNames = "StudentService::getByTelegramId", key = "#id"),
                     @CacheEvict(cacheNames = "TeacherService::getByTelegramId", key = "#id"),
-                    @CacheEvict(cacheNames = "UserRoleService::getRoleByTelegramId", key = "#id")
+                    @CacheEvict(cacheNames = "UserRoleService::getRoleByTelegramId", key = "#id"),
+                    @CacheEvict(cacheNames = "ScheduleService::studentGetById", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true)
             }
     )
     public void deleteByTelegramId(Long id) {
@@ -81,7 +81,9 @@ public class UserServiceImpl implements UserService{
                     @CacheEvict(cacheNames = "UserService::getByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "UserService::existByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "StudentService::getByAliceId", key = "#id"),
-                    @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id")
+                    @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id"),
+                    @CacheEvict(cacheNames = "ScheduleService::studentGetById", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true)
             }
     )
     public void deleteByAliceId(String id) {
