@@ -44,6 +44,7 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
 
     @Transactional
     @Scheduled(cron = "0 10 16 * * *")
+    @CacheEvict(cacheNames = "ScheduleService::getAll", allEntries = true)
     public void parseJsonAddDatabase() {
         List<DepartmentEntity> departments = departmentService.getAll();
         for(DepartmentEntity department : departments) {
@@ -59,7 +60,6 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     @Scheduled(cron = "0 0 8 * * *")
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "ScheduleService::getAll"),
                     @CacheEvict(cacheNames = "ScheduleService::getByTeacher", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::getByGroupName", allEntries = true),
@@ -79,7 +79,7 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     private List<Schedule> parseJsonScript(Boolean nextDate, Short departmentId) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(scriptUrl + "?next_date=" + nextDate + "$department_id=" + departmentId))
+                .uri(URI.create(scriptUrl + "?next_date=" + nextDate + "&department_id=" + departmentId))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return objectMapper.readValue(response.body(), new TypeReference<>() {});
