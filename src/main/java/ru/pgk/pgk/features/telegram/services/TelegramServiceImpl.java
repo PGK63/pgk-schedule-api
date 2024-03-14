@@ -33,6 +33,7 @@ public class TelegramServiceImpl implements TelegramService {
     @Override
     @Transactional(readOnly = true)
     public void sendMessageNewSchedule(Short departmentId, Integer scheduleId) {
+        /*
         List<StudentEntity> students = studentService.getAll(departmentId);
         List<TeacherEntity> teachers = teacherService.getAll(departmentId);
 
@@ -44,7 +45,7 @@ public class TelegramServiceImpl implements TelegramService {
         for(TeacherEntity teacher : teachers) {
             ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher);
             sendMessage(teacher.getUser().getTelegramId(), getMessageNewScheduleTeacher(response));
-        }
+        }*/
     }
 
     @Override
