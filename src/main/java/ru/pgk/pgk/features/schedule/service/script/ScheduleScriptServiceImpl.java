@@ -62,7 +62,7 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
             evict = {
                     @CacheEvict(cacheNames = "ScheduleService::getByTeacher", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true),
-                    @CacheEvict(cacheNames = "ScheduleService::getByGroupName", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::getByStudent", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::studentGetById", allEntries = true)
             }
     )

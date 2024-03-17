@@ -41,13 +41,17 @@ public class TelegramServiceImpl implements TelegramService {
         List<TeacherEntity> teachers = teacherService.getAll(departmentId);
 
         for(StudentEntity student : students) {
-            ScheduleStudentResponse response = scheduleService.getByStudent(scheduleId, student);
-            sendMessage(student.getUser().getTelegramId(), getMessageNewScheduleStudent(response));
+            try {
+                ScheduleStudentResponse response = scheduleService.getByStudent(scheduleId, student);
+                sendMessage(student.getUser().getTelegramId(), getMessageNewScheduleStudent(response));
+            }catch (Exception ignore){}
         }
 
         for(TeacherEntity teacher : teachers) {
-            ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher);
-            sendMessage(teacher.getUser().getTelegramId(), getMessageNewScheduleTeacher(response));
+            try {
+                ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher);
+                sendMessage(teacher.getUser().getTelegramId(), getMessageNewScheduleTeacher(response));
+            }catch (Exception ignore){}
         }
     }
 
