@@ -49,16 +49,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Cacheable(cacheNames = "ScheduleService::studentGetById", key = "#scheduleId-#telegramId")
     public ScheduleStudentResponse studentGetById(Integer scheduleId, Long telegramId) {
         StudentEntity student = studentService.getByTelegramId(telegramId);
-        return getByGroupName(scheduleId, student.getGroupName());
+        return getByStudent(scheduleId, student);
     }
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::getByGroupName", key = "#scheduleId-#name")
-    public ScheduleStudentResponse getByGroupName(Integer scheduleId, String name) {
+    @Cacheable(cacheNames = "ScheduleService::getByStudent", key = "#scheduleId-#student.id")
+    public ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student) {
         ScheduleEntity schedule = getById(scheduleId);
         Optional<ScheduleRow> optionalRow = schedule.getRows().stream()
-                .filter(r -> r.group_name().contains(name)).findFirst();
+                .filter(r -> r.group_name().contains(student.getGroupName())).findFirst();
 
         if(optionalRow.isEmpty()) throw new ResourceNotFoundException("Schedule not found");
         ScheduleRow row = optionalRow.get();
