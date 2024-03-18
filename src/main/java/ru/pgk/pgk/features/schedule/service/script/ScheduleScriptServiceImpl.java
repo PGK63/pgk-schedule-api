@@ -43,7 +43,7 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 10 16 * * *")
+    @Scheduled(cron = "0 0 16 * * *")
     @CacheEvict(cacheNames = "ScheduleService::getAll", allEntries = true)
     public void parseJsonAddDatabase() {
         List<DepartmentEntity> departments = departmentService.getAll();
