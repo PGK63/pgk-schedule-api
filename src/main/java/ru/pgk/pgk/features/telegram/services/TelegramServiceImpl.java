@@ -84,7 +84,7 @@ public class TelegramServiceImpl implements TelegramService {
             String number = "\n\n🕒 Пара: " + column.number();
             if(column.exam()) number += " (\uD83D\uDCCCЭкзамен)";
             String cabinet = "\n\uD83C\uDFE2 Кабинет: " + (column.cabinet() != null ? column.cabinet() : "Не указан");
-            String teacher = "\n\uD83D\uDC64 Преподаватель: " + (column.teacher() != null ? column.cabinet() : "Не указан");
+            String teacher = "\n\uD83D\uDC64 Преподаватель: " + (column.teacher() != null ? column.teacher() : "Не указан");
 
             message.append(number).append(cabinet).append(teacher);
             if(column.exam()) message.append("\n\uD83D\uDCCC Экзамен");
