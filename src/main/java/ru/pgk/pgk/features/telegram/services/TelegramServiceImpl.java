@@ -44,14 +44,20 @@ public class TelegramServiceImpl implements TelegramService {
             try {
                 ScheduleStudentResponse response = scheduleService.getByStudent(scheduleId, student);
                 sendMessage(student.getUser().getTelegramId(), getMessageNewScheduleStudent(response));
-            }catch (Exception ignore){}
+                System.out.println(student.getId());
+            }catch (Exception ignore){
+                System.out.println(ignore.getMessage());
+            }
         }
 
         for(TeacherEntity teacher : teachers) {
             try {
                 ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher);
                 sendMessage(teacher.getUser().getTelegramId(), getMessageNewScheduleTeacher(response));
-            }catch (Exception ignore){}
+                System.out.println(teacher.getId());
+            }catch (Exception ignore){
+                System.out.println(ignore.getMessage());
+            }
         }
     }
 

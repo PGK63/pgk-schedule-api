@@ -3,6 +3,8 @@ package ru.pgk.pgk.features.schedule.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
@@ -39,9 +41,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::getAll")
-    public List<ScheduleEntity> getAll(Short departmentId) {
-        return scheduleRepository.findAllByDepartmentId(departmentId);
+    @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", key = "#departmentId-#offset")
+    public Page<ScheduleEntity> getAll(Short departmentId, Integer offset) {
+        return scheduleRepository.findAllByDepartmentId(departmentId, PageRequest.of(offset, 7));
     }
 
     @Override

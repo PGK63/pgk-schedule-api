@@ -1,5 +1,6 @@
 package ru.pgk.pgk.features.schedule.service;
 
+import org.springframework.data.domain.Page;
 import ru.pgk.pgk.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
 import ru.pgk.pgk.features.schedule.entities.ScheduleEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public interface ScheduleService {
 
-    List<ScheduleEntity> getAll(Short departmentId);
+    Page<ScheduleEntity> getAll(Short departmentId, Integer offset);
 
     ScheduleStudentResponse studentGetById(Integer scheduleId, Long telegramId);
     ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student);

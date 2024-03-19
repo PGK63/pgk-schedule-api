@@ -1,14 +1,14 @@
 package ru.pgk.pgk.features.schedule.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import ru.pgk.pgk.common.dto.PageDto;
 import ru.pgk.pgk.features.schedule.dto.ScheduleDto;
 import ru.pgk.pgk.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
 import ru.pgk.pgk.features.schedule.mappers.ScheduleMapper;
 import ru.pgk.pgk.features.schedule.service.ScheduleService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("schedules")
@@ -20,10 +20,12 @@ public class ScheduleController {
     private final ScheduleMapper scheduleMapper;
 
     @GetMapping
-    private List<ScheduleDto> getAll(
-            @RequestParam Short departmentId
+    private PageDto<ScheduleDto> getAll(
+            @RequestParam Short departmentId,
+            @RequestParam(defaultValue = "0") Integer offset
     ) {
-        return scheduleMapper.toDto(scheduleService.getAll(departmentId));
+        Page<ScheduleDto> page = scheduleService.getAll(departmentId, offset).map(scheduleMapper::toDto);
+        return PageDto.fromPage(page);
     }
 
     @GetMapping("{id}/student/by-telegram-id/{t-id}")

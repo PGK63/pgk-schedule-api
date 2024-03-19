@@ -1,5 +1,7 @@
 package ru.pgk.pgk.features.schedule.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.pgk.pgk.features.schedule.entities.ScheduleEntity;
 
@@ -9,7 +11,7 @@ import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Integer> {
 
-    List<ScheduleEntity> findAllByDepartmentId(Short id);
+    Page<ScheduleEntity> findAllByDepartmentId(Short id, Pageable pageable);
 
     Optional<ScheduleEntity> findByDepartmentIdAndDate(Short departmentId, LocalDate date);
 }

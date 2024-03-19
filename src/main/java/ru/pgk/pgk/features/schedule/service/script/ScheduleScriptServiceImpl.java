@@ -48,10 +48,15 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     public void parseJsonAddDatabase() {
         List<DepartmentEntity> departments = departmentService.getAll();
         for(DepartmentEntity department : departments) {
-            List<Schedule> schedules = parseJsonScript(true, department.getId());
-            for(Schedule schedule : schedules) {
-                ScheduleEntity scheduleEntity = scheduleService.add(schedule, department.getId());
-                telegramService.sendMessageNewSchedule(department.getId(), scheduleEntity.getId());
+            try {
+                List<Schedule> schedules = parseJsonScript(true, department.getId());
+                System.out.println(schedules);
+                for(Schedule schedule : schedules) {
+                    ScheduleEntity scheduleEntity = scheduleService.add(schedule, department.getId());
+                    telegramService.sendMessageNewSchedule(department.getId(), scheduleEntity.getId());
+                }
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
