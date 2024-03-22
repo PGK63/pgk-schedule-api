@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.pgk.pgk.features.department.dto.DepartmentDto;
 import ru.pgk.pgk.features.department.mappers.DepartmentMapper;
 import ru.pgk.pgk.features.department.services.DepartmentService;
+import ru.pgk.pgk.security.GlobalSecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("departments")
 @RequiredArgsConstructor
+@GlobalSecurityRequirement
 public class DepartmentController {
 
     private final DepartmentService departmentService;

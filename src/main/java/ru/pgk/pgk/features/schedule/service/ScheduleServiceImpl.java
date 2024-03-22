@@ -110,7 +110,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 schedule.getDate(),
                 sortedTeacherRows
         );
-
     }
 
     private static List<ScheduleTeacherColumnDto> getScheduleTeacherColumnDtos(TeacherEntity teacher, ScheduleRow row) {

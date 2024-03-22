@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.services.UserService;
 import ru.pgk.pgk.features.user.services.role.UserRoleService;
+import ru.pgk.pgk.security.GlobalSecurityRequirement;
 
 @RestController
 @RequestMapping("users")
+@GlobalSecurityRequirement
 @RequiredArgsConstructor
 public class UserController {
 

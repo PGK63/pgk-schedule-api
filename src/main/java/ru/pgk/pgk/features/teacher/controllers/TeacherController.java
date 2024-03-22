@@ -10,11 +10,13 @@ import ru.pgk.pgk.features.teacher.mappers.TeacherDetailsMapper;
 import ru.pgk.pgk.features.teacher.mappers.TeacherMapper;
 import ru.pgk.pgk.features.teacher.repositoties.TeacherRepository;
 import ru.pgk.pgk.features.teacher.service.TeacherService;
+import ru.pgk.pgk.security.GlobalSecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("teachers")
+@GlobalSecurityRequirement
 @RequiredArgsConstructor
 public class TeacherController {
 

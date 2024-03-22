@@ -1,20 +1,12 @@
-CREATE TABLE api_token_types
-(
-    id smallint generated always as identity,
-    type varchar(24) not null,
-
-    CONSTRAINT PK__api_token_types__key PRIMARY KEY(id)
-);
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE api_tokens
 (
     id int generated always as identity,
-    token varchar(64) not null,
-    type_int smallint not null,
-    date_create date not null,
+    token uuid unique not null default uuid_generate_v4(),
+    date date not null default current_date,
 
-    CONSTRAINT PK__users__api_tokens PRIMARY KEY(id),
-    CONSTRAINT FK__users__type_id FOREIGN KEY(id) REFERENCES api_token_types(id)
+    CONSTRAINT PK__users__api_tokens PRIMARY KEY(id)
 );
 
 CREATE TABLE users
