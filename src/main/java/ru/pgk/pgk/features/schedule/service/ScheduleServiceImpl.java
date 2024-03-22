@@ -13,6 +13,7 @@ import ru.pgk.pgk.features.department.services.DepartmentService;
 import ru.pgk.pgk.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherColumnDto;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
+import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherRowDto;
 import ru.pgk.pgk.features.schedule.entities.ScheduleEntity;
 import ru.pgk.pgk.features.schedule.entities.json.Schedule;
 import ru.pgk.pgk.features.schedule.entities.json.ScheduleColumn;
@@ -24,10 +25,7 @@ import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import ru.pgk.pgk.features.teacher.service.TeacherService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -84,33 +82,52 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getByTeacher", key = "#scheduleId-#teacher.id")
     public ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherEntity teacher) {
-       ScheduleEntity schedule = getById(scheduleId);
-       List<ScheduleTeacherColumnDto> teacherColumns = new ArrayList<>();
+        ScheduleEntity schedule = getById(scheduleId);
+        List<ScheduleTeacherRowDto> teacherRows = new ArrayList<>();
 
-       for(ScheduleRow row : schedule.getRows()) {
-           for (ScheduleColumn column : row.columns()) {
+        for (ScheduleRow row : schedule.getRows()) {
+            List<ScheduleTeacherColumnDto> teacherColumns = getScheduleTeacherColumnDtos(teacher, row);
 
-               if((column.teacher() == null && teacher.getCabinet() != null && column.cabinet() != null
-                       && column.cabinet().contains(teacher.getCabinet()))
-                       || (column.teacher() != null
-                       && column.teacher().equals(teacher.getFIO()))
-               ) {
-                   ScheduleTeacherColumnDto teacherColumn = new ScheduleTeacherColumnDto(
-                           column.number(),
-                           row.shift(),
-                           row.group_name(),
-                           column.cabinet(),
-                           column.exam()
-                   );
-                   teacherColumns.add(teacherColumn);
-               }
-           }
-       }
+            if (!teacherColumns.isEmpty()) {
+                ScheduleTeacherRowDto teacherRow = new ScheduleTeacherRowDto(row.shift(), row.group_name(), teacherColumns);
+                teacherRows.add(teacherRow);
+            }
+        }
 
-       return new ScheduleTeacherResponse(
-               schedule.getDate(),
-               teacherColumns.stream().sorted(Comparator.comparing(ScheduleTeacherColumnDto::number)).toList()
-       );
+        List<ScheduleTeacherRowDto> sortedTeacherRows = teacherRows.stream()
+                .sorted(Comparator.comparing((ScheduleTeacherRowDto teacherRow) -> {
+                    String shift = teacherRow.shift();
+                    shift = shift.equals("1 см") ? "8:30" : shift.equals("2 см") ? "13:30" : shift;
+                    String[] parts = shift.split(":");
+                    return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+                }).thenComparing(row -> row.columns().stream().map(ScheduleTeacherColumnDto::number).min(Integer::compareTo).orElse(Integer.MAX_VALUE)))
+                .toList();
+
+        return new ScheduleTeacherResponse(
+                schedule.getDate(),
+                sortedTeacherRows
+        );
+
+    }
+
+    private static List<ScheduleTeacherColumnDto> getScheduleTeacherColumnDtos(TeacherEntity teacher, ScheduleRow row) {
+        List<ScheduleTeacherColumnDto> teacherColumns = new ArrayList<>();
+
+        for (ScheduleColumn column : row.columns()) {
+            if((column.teacher() == null && teacher.getCabinet() != null && column.cabinet() != null
+                    && column.cabinet().contains(teacher.getCabinet()))
+                    || (column.teacher() != null
+                    && column.teacher().equals(teacher.getFIO()))
+            ) {
+                ScheduleTeacherColumnDto teacherColumn = new ScheduleTeacherColumnDto(
+                        column.number(),
+                        column.cabinet(),
+                        column.exam()
+                );
+                teacherColumns.add(teacherColumn);
+            }
+        }
+        return teacherColumns;
     }
 
     @Transactional(readOnly = true)

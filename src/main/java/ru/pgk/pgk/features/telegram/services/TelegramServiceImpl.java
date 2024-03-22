@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherColumnDto;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
+import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherRowDto;
 import ru.pgk.pgk.features.schedule.entities.json.ScheduleColumn;
 import ru.pgk.pgk.features.schedule.service.ScheduleService;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
@@ -45,8 +46,8 @@ public class TelegramServiceImpl implements TelegramService {
                 ScheduleStudentResponse response = scheduleService.getByStudent(scheduleId, student);
                 sendMessage(student.getUser().getTelegramId(), getMessageNewScheduleStudent(response));
                 System.out.println(student.getId());
-            }catch (Exception ignore){
-                System.out.println(ignore.getMessage());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
             }
         }
 
@@ -55,8 +56,8 @@ public class TelegramServiceImpl implements TelegramService {
                 ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher);
                 sendMessage(teacher.getUser().getTelegramId(), getMessageNewScheduleTeacher(response));
                 System.out.println(teacher.getId());
-            }catch (Exception ignore){
-                System.out.println(ignore.getMessage());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -75,11 +76,14 @@ public class TelegramServiceImpl implements TelegramService {
 
     private String getMessageNewScheduleTeacher(ScheduleTeacherResponse response) {
         String message = response.date().format(pattern);
-        for(ScheduleTeacherColumnDto column : response.columns()) {
-            message += "\n\n\uD83D\uDD52 Пара: " + column.number() + " (" + column.shift()+ ")" +
-                    "\n\uD83C\uDFE2 Кабинет: " + column.cabinet() +
-                    "\n\uD83D\uDC65 Группа: " + column.group_name();
-            if(column.exam()) message += "\n\uD83D\uDCCC Экзамен";
+        for(ScheduleTeacherRowDto row : response.rows()) {
+            message += row.group_name() + " (" + row.shift()+ ")";
+            for(ScheduleTeacherColumnDto column : row.columns()) {
+                message += "\n\n\uD83D\uDD52 Пара: " + column.number()  +
+                        "\n\uD83C\uDFE2 Кабинет: " + column.cabinet();
+                if(column.exam()) message += "\n\uD83D\uDCCC Экзамен";
+            }
+            message += "\n\n\n";
         }
         return message;
     }
