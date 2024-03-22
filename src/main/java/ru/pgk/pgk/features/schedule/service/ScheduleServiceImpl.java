@@ -43,7 +43,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", key = "#departmentId-#offset")
     public Page<ScheduleEntity> getAll(Short departmentId, Integer offset) {
-        return scheduleRepository.findAllByDepartmentId(departmentId, PageRequest.of(offset, 7));
+        return scheduleRepository.findAllByDepartmentIdOrderByDateDesc(departmentId, PageRequest.of(offset, 5));
     }
 
     @Override

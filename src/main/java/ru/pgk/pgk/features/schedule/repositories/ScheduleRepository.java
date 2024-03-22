@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Integer> {
 
-    Page<ScheduleEntity> findAllByDepartmentId(Short id, Pageable pageable);
+    Page<ScheduleEntity> findAllByDepartmentIdOrderByDateDesc(Short id, Pageable pageable);
 
     Optional<ScheduleEntity> findByDepartmentIdAndDate(Short departmentId, LocalDate date);
 }
