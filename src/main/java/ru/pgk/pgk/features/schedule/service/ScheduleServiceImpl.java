@@ -96,7 +96,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         List<ScheduleTeacherRowDto> sortedTeacherRows = teacherRows.stream()
                 .sorted(Comparator.comparing((ScheduleTeacherRowDto teacherRow) -> {
-                    String shift = teacherRow.shift();
+                    String shift = teacherRow.shift()
+                            .toLowerCase()
+                            .replace("с ", "")
+                            .trim();
                     shift = shift.equals("1 см") ? "8:30" : shift.equals("2 см") ? "13:30" : shift;
                     String[] parts = shift.split(":");
                     return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);

@@ -1,7 +1,6 @@
 package ru.pgk.pgk.features.user.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.pgk.pgk.features.user.entities.UserEntity;
