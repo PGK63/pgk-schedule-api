@@ -2,11 +2,9 @@ package ru.pgk.pgk.features.department.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.pgk.pgk.features.department.dto.DepartmentDto;
+import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.department.mappers.DepartmentMapper;
 import ru.pgk.pgk.features.department.services.DepartmentService;
 import ru.pgk.pgk.security.GlobalSecurityRequirement;
@@ -27,5 +25,14 @@ public class DepartmentController {
     @ResponseStatus(HttpStatus.OK)
     private List<DepartmentDto> getAll() {
         return departmentMapper.toDto(departmentService.getAll());
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    private Short add(
+            @RequestParam String name
+    ) {
+        DepartmentEntity department = departmentService.add(name);
+        return department.getId();
     }
 }

@@ -9,4 +9,6 @@ public interface DepartmentService {
     DepartmentEntity getById(Short id);
 
     List<DepartmentEntity> getAll();
+
+    DepartmentEntity add(String name);
 }

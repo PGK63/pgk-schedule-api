@@ -1,6 +1,10 @@
 package ru.pgk.pgk.features.department.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
@@ -17,6 +21,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "DepartmentService::getById", key = "#id")
     public DepartmentEntity getById(Short id) {
         return departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
@@ -24,7 +29,20 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "DepartmentService::getAll")
     public List<DepartmentEntity> getAll() {
         return departmentRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    @Caching(
+            evict = @CacheEvict(cacheNames = "DepartmentService::getAll"),
+            put = @CachePut(cacheNames = "DepartmentService::getById", key = "#result.id")
+    )
+    public DepartmentEntity add(String name) {
+        DepartmentEntity department = new DepartmentEntity();
+        department.setName(name);
+        return departmentRepository.save(department);
     }
 }

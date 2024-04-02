@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.3'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.flywaydb.flyway' version '8.0.1'
 }
 
 group = 'ru.pgk'
@@ -53,4 +54,13 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+flyway {
+	url = 'jdbc:postgresql://danbel.ru:5432/pgk-schedule'
+	user = 'postgres'
+	password = 'danbelZzAa6190'
+	locations = ['classpath:db/migration']
+	schemas = ['public']
+	baselineOnMigrate = true
 }
