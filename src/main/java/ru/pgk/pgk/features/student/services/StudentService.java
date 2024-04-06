@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StudentService {
 
-    List<StudentEntity> getAll(Short departmentId);
+    List<StudentEntity> getAllByTelegramNotNull(Short departmentId);
 
     StudentEntity getById(Integer id);
     StudentEntity getByTelegramId(Long id);

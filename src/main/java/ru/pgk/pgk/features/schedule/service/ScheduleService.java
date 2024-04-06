@@ -7,7 +7,7 @@ import ru.pgk.pgk.features.schedule.entities.ScheduleEntity;
 import ru.pgk.pgk.features.schedule.entities.json.Schedule;
 import ru.pgk.pgk.features.schedule.entities.json.ScheduleRow;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
-import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
+import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +20,7 @@ public interface ScheduleService {
     ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student);
 
     ScheduleTeacherResponse teacherGetById(Integer scheduleId, Long telegramId);
-    ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherEntity teacher);
+    ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherUserEntity teacher);
 
     ScheduleEntity add(Schedule schedule, Short departmentId);
 

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'ru.pgk'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
 	sourceCompatibility = '17'
@@ -44,6 +44,13 @@ dependencies {
 
 	//Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//Security
+	def jjwt_version = '0.11.5'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation "io.jsonwebtoken:jjwt-api:${jjwt_version}"
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwt_version}"
+	runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwt_version}"
 }
 
 dependencyManagement {
@@ -57,7 +64,7 @@ tasks.named('test') {
 }
 
 flyway {
-	url = 'jdbc:postgresql://danbel.ru:5432/pgk-schedule'
+	url = 'jdbc:postgresql://danbel.ru:5432/pgk-schedule-test'
 	user = 'postgres'
 	password = 'danbelZzAa6190'
 	locations = ['classpath:db/migration']

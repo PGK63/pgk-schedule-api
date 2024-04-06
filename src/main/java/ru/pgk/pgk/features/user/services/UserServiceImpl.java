@@ -10,8 +10,6 @@ import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.repositoties.UserRepository;
 
-import static ru.pgk.pgk.common.extensions.BaseExtensions.exist;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -23,6 +21,13 @@ public class UserServiceImpl implements UserService{
     @Cacheable(cacheNames = "UserService::getById", key = "#id")
     public UserEntity getById(Integer id) {
         return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserEntity getByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
@@ -41,21 +46,6 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByAliceId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "UserService::existByTelegramId", key = "#id")
-    public Boolean existByTelegramId(Long id) {
-        return exist(() -> getByTelegramId(id));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "UserService::existByAliceId", key = "#id")
-    public Boolean existByAliceId(String id) {
-        return exist(() -> getByAliceId(id));
-    }
-
 
     @Override
     @Transactional

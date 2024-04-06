@@ -13,7 +13,10 @@ import ru.pgk.pgk.features.schedule.service.ScheduleService;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.student.services.StudentService;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
+import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
 import ru.pgk.pgk.features.teacher.service.TeacherService;
+import ru.pgk.pgk.features.teacher.service.user.TeacherUserService;
+import ru.pgk.pgk.features.user.entities.TelegramUserEntity;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -29,7 +32,7 @@ import java.util.List;
 public class TelegramServiceImpl implements TelegramService {
 
     private final StudentService studentService;
-    private final TeacherService teacherService;
+    private final TeacherUserService teacherUserService;
     private final ScheduleService scheduleService;
 
     private final DateTimeFormatter pattern = DateTimeFormatter.ofPattern("EE, d MMMM yyyy");
@@ -38,23 +41,23 @@ public class TelegramServiceImpl implements TelegramService {
     @Override
     @Transactional(readOnly = true)
     public void sendMessageNewSchedule(Short departmentId, Integer scheduleId) {
-        List<StudentEntity> students = studentService.getAll(departmentId);
-        List<TeacherEntity> teachers = teacherService.getAll(departmentId);
+        List<StudentEntity> students = studentService.getAllByTelegramNotNull(departmentId);
+        List<TeacherUserEntity> teachers = teacherUserService.getAllByTelegramNotNull(departmentId);
 
         for(StudentEntity student : students) {
             try {
                 ScheduleStudentResponse response = scheduleService.getByStudent(scheduleId, student);
-                sendMessage(student.getUser().getTelegramId(), getMessageNewScheduleStudent(response));
+                sendMessage(student.getUser().getTelegram().getTelegramId(), getMessageNewScheduleStudent(response));
                 System.out.println(student.getId());
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }
         }
 
-        for(TeacherEntity teacher : teachers) {
+        for(TeacherUserEntity teacher : teachers) {
             try {
                 ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher);
-                sendMessage(teacher.getUser().getTelegramId(), getMessageNewScheduleTeacher(response));
+                sendMessage(teacher.getUser().getTelegram().getTelegramId(), getMessageNewScheduleTeacher(response));
                 System.out.println(teacher.getId());
             }catch (Exception e){
                 System.out.println(e.getMessage());

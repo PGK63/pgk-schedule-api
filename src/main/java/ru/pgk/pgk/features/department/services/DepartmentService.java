@@ -11,4 +11,6 @@ public interface DepartmentService {
     List<DepartmentEntity> getAll();
 
     DepartmentEntity add(String name);
+
+    void deleteById(Short id);
 }

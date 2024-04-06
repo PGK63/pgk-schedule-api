@@ -24,7 +24,7 @@ public class ApiTokenServiceImpl implements ApiTokenService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ApiTokenService::getAll")
     public List<ApiTokenEntity> getAll() {
-        return null;
+        return apiTokenRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -44,7 +44,7 @@ public class ApiTokenServiceImpl implements ApiTokenService {
     @Override
     @Transactional
     @CachePut(cacheNames = "ApiTokenService::getByToken", key = "#result.token")
-    @CacheEvict(cacheNames = "ApiTokenService::getAll")
+    @CacheEvict(cacheNames = "ApiTokenService::getAll", allEntries = true)
     public ApiTokenEntity add() {
         ApiTokenEntity apiToken = new ApiTokenEntity();
         return apiTokenRepository.save(apiToken);
@@ -55,7 +55,7 @@ public class ApiTokenServiceImpl implements ApiTokenService {
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "ApiTokenService::getByToken", key = "#result.token"),
-                    @CacheEvict(cacheNames = "ApiTokenService::getAll")
+                    @CacheEvict(cacheNames = "ApiTokenService::getAll", allEntries = true)
             }
     )
     public ApiTokenEntity deleteById(Integer id) {

@@ -22,10 +22,14 @@ import ru.pgk.pgk.features.schedule.repositories.ScheduleRepository;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.student.services.StudentService;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
-import ru.pgk.pgk.features.teacher.service.TeacherService;
+import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
+import ru.pgk.pgk.features.teacher.service.user.TeacherUserService;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +38,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     private final StudentService studentService;
-    private final TeacherService teacherService;
+    private final TeacherUserService teacherUserService;
     private final DepartmentService departmentService;
 
     @Override
@@ -74,19 +78,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::teacherGetById", key = "#scheduleId-#telegramId")
     public ScheduleTeacherResponse teacherGetById(Integer scheduleId, Long telegramId) {
-        TeacherEntity teacher = teacherService.getByTelegramId(telegramId);
+        TeacherUserEntity teacher = teacherUserService.getByTelegramId(telegramId);
         return getByTeacher(scheduleId, teacher);
     }
 
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getByTeacher", key = "#scheduleId-#teacher.id")
-    public ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherEntity teacher) {
+    public ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherUserEntity teacher) {
         ScheduleEntity schedule = getById(scheduleId);
         List<ScheduleTeacherRowDto> teacherRows = new ArrayList<>();
 
         for (ScheduleRow row : schedule.getRows()) {
-            List<ScheduleTeacherColumnDto> teacherColumns = getScheduleTeacherColumnDtos(teacher, row);
+            List<ScheduleTeacherColumnDto> teacherColumns = getScheduleTeacherColumnDtos(teacher.getTeacher(), row);
 
             if (!teacherColumns.isEmpty()) {
                 ScheduleTeacherRowDto teacherRow = new ScheduleTeacherRowDto(row.shift(), row.group_name(), teacherColumns);

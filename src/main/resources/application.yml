@@ -2,10 +2,10 @@ server:
   port: 10025
   forward-headers-strategy: framework
   servlet:
-    context-path: /pgk/schedule
+    context-path: /pgk/schedule/v1.1
 spring:
   datasource:
-    url: jdbc:postgresql://danbel.ru:5432/pgk-schedule
+    url: jdbc:postgresql://danbel.ru:5432/pgk-schedule-test
     username: postgres
     password: danbelZzAa6190
   cache:
@@ -16,3 +16,7 @@ spring:
       host: danbel.ru
       port: 6379
       password: ggtt1234redis
+jwt:
+  secret:
+    access: qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w
+    refresh: zL1HB3Pch05Avfynovxrf/kpF9O2m4NCWKJUjEp27s9J2jEG3ifiKCGyla Z8fDeoONSTJP/wAzKawB8F9rOMNg==

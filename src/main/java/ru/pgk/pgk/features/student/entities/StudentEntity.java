@@ -8,7 +8,7 @@ import ru.pgk.pgk.features.user.entities.UserEntity;
 import java.io.Serializable;
 
 @Data
-@Entity(name = "students")
+@Entity(name = "student_users")
 public class StudentEntity implements Serializable {
 
     @Id

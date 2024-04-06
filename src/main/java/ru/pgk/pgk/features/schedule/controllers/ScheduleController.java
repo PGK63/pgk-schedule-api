@@ -9,7 +9,7 @@ import ru.pgk.pgk.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
 import ru.pgk.pgk.features.schedule.mappers.ScheduleMapper;
 import ru.pgk.pgk.features.schedule.service.ScheduleService;
-import ru.pgk.pgk.security.GlobalSecurityRequirement;
+import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
 @RequestMapping("schedules")

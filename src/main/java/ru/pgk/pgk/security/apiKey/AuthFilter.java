@@ -1,4 +1,4 @@
-package ru.pgk.pgk.security;
+package ru.pgk.pgk.security.apiKey;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,10 +23,14 @@ public class AuthFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) {
         try {
-            //TODO:Using no sql
-            String tokenFromHeader = request.getHeader("X-API-KEY");
-            apiTokenService.getByToken(UUID.fromString(tokenFromHeader));
-            filterChain.doFilter(request, response);
+            String uri = request.getRequestURI();
+            if (uri != null && (uri.contains("/swagger-ui") || uri.contains("v3/api-docs"))) {
+                filterChain.doFilter(request, response);
+            } else {
+                String tokenFromHeader = request.getHeader("X-API-KEY");
+                apiTokenService.getByToken(UUID.fromString(tokenFromHeader));
+                filterChain.doFilter(request, response);
+            }
         }catch (Exception ignore) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }

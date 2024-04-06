@@ -1,4 +1,4 @@
-package ru.pgk.pgk.security;
+package ru.pgk.pgk.security.apiKey;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 

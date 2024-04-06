@@ -1,10 +1,11 @@
 package ru.pgk.pgk.features.advice;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.pgk.pgk.common.exceptions.BadRequestException;
+import ru.pgk.pgk.common.exceptions.ForbiddenException;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
 import ru.pgk.pgk.features.advice.model.ExceptionModel;
 
@@ -26,9 +27,9 @@ public class AdviceController {
         return new ExceptionModel(e.getMessage(), "illegal_state_error");
     }
 
-    @ExceptionHandler({ AccessDeniedException.class })
+    @ExceptionHandler({ AccessDeniedException.class, ForbiddenException.class })
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionModel handleAccessDenied(final AccessDeniedException e) {
+    public ExceptionModel handleAccessDenied(final Exception e) {
         return new ExceptionModel(e.getMessage() == null ? "Access denied" : e.getMessage(), "access_denied_error");
     }
 

@@ -9,7 +9,7 @@ import ru.pgk.pgk.features.student.dto.params.AddStudentParams;
 import ru.pgk.pgk.features.student.mapper.StudentDetailsMapper;
 import ru.pgk.pgk.features.student.mapper.StudentMapper;
 import ru.pgk.pgk.features.student.services.StudentService;
-import ru.pgk.pgk.security.GlobalSecurityRequirement;
+import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
 @RequestMapping("students")

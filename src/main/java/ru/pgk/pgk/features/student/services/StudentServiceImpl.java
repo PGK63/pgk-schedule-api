@@ -14,6 +14,8 @@ import ru.pgk.pgk.features.student.dto.params.AddStudentParams;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.student.repositoties.StudentRepository;
 import ru.pgk.pgk.features.student.services.cache.StudentCacheService;
+import ru.pgk.pgk.features.user.entities.AliceUserEntity;
+import ru.pgk.pgk.features.user.entities.TelegramUserEntity;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 
 import java.util.List;
@@ -29,8 +31,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StudentEntity> getAll(Short departmentId) {
-        return studentRepository.findAllByDepartmentId(departmentId);
+    public List<StudentEntity> getAllByTelegramNotNull(Short departmentId) {
+        return studentRepository.findAllByDepartmentIdAndTelegramNotNull(departmentId);
     }
 
     @Override
@@ -70,7 +72,9 @@ public class StudentServiceImpl implements StudentService {
     )
     public StudentEntity add(Long telegramId, AddStudentParams params) {
         UserEntity user = new UserEntity();
-        user.setTelegramId(telegramId);
+        TelegramUserEntity telegramUser = new TelegramUserEntity();
+        telegramUser.setTelegramId(telegramId);
+        user.setTelegram(telegramUser);
         return add(user, params);
     }
 
@@ -87,7 +91,9 @@ public class StudentServiceImpl implements StudentService {
     )
     public StudentEntity add(String aliceId, AddStudentParams params) {
         UserEntity user = new UserEntity();
-        user.setAliceId(aliceId);
+        AliceUserEntity aliceUser = new AliceUserEntity();
+        aliceUser.setAliceId(aliceId);
+        user.setAlice(aliceUser);
         return add(user, params);
     }
 
