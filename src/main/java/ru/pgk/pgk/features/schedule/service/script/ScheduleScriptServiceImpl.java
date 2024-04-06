@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleScriptServiceImpl implements ScheduleScriptService {
 
-    private final String scriptUrl = "http://api.danbel.ru/pgk/schedule/script";
+    private final String scriptUrl = "https://api.danbel.ru:30/pgk/schedule/script";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final TelegramService telegramService;
