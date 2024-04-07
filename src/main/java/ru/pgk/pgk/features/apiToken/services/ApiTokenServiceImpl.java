@@ -45,8 +45,9 @@ public class ApiTokenServiceImpl implements ApiTokenService {
     @Transactional
     @CachePut(cacheNames = "ApiTokenService::getByToken", key = "#result.token")
     @CacheEvict(cacheNames = "ApiTokenService::getAll", allEntries = true)
-    public ApiTokenEntity add() {
+    public ApiTokenEntity add(String name) {
         ApiTokenEntity apiToken = new ApiTokenEntity();
+        apiToken.setName(name);
         return apiTokenRepository.save(apiToken);
     }
 

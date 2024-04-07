@@ -18,6 +18,7 @@ public class ApiTokenEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String name;
     private UUID token = UUID.randomUUID();
     private LocalDate date = LocalDate.now();
 }

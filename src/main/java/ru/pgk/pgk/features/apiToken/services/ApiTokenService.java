@@ -11,7 +11,7 @@ public interface ApiTokenService {
 
     ApiTokenEntity getByToken(UUID token);
 
-    ApiTokenEntity add();
+    ApiTokenEntity add(String name);
 
     ApiTokenEntity deleteById(Integer id);
 }

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public record ApiTokenDto(
         Integer id,
+        String name,
         UUID token,
         LocalDate date
 ) {}

@@ -41,12 +41,13 @@ public class ApiTokenController {
 
     @PostMapping
     private ApiTokenDto add(
+            @RequestParam String name,
             @AuthenticationPrincipal JwtEntity jwtEntity
     ) {
         if(jwtEntity == null || jwtEntity.getAdminType() != AdminTypeEntity.Type.FULL)
             throw new ForbiddenException();
 
-        return apiTokenMapper.toDto(apiTokenService.add());
+        return apiTokenMapper.toDto(apiTokenService.add(name));
     }
 
     @DeleteMapping("{id}")
