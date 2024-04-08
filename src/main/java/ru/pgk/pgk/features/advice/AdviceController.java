@@ -42,6 +42,7 @@ public class AdviceController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionModel handleException(final Exception e) {
+        e.printStackTrace();
         return new ExceptionModel(e.getMessage(), "internal_error");
     }
 }

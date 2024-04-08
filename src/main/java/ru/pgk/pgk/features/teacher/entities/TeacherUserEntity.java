@@ -17,6 +17,6 @@ public class TeacherUserEntity implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private TeacherEntity teacher;
 }

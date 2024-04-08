@@ -1,6 +1,7 @@
 package ru.pgk.pgk.features.user.repositoties;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 
@@ -17,9 +18,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Query("SELECT u FROM users u WHERE u.usernamePassword.username = ?1")
     Optional<UserEntity> findByUsername(String username);
 
+    @Modifying
     @Query("DELETE FROM users u WHERE u.telegram.telegramId = ?1")
     void deleteByTelegramId(Long id);
 
+    @Modifying
     @Query("DELETE FROM users u WHERE u.alice.aliceId = ?1")
     void deleteByAliceId(String id);
 }

@@ -12,6 +12,6 @@ public interface UserService {
 
     UserEntity getByAliceId(String id);
 
-    void deleteByTelegramId(Long id);
-    void deleteByAliceId(String id);
+    UserEntity deleteByTelegramId(Long id);
+    UserEntity deleteByAliceId(String id);
 }

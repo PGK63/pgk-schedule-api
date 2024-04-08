@@ -4,7 +4,7 @@ CREATE TABLE telegram_users
     telegram_id bigint not null,
 
     CONSTRAINT PK__telegram_users__key PRIMARY KEY(user_id),
-    CONSTRAINT FK__telegram_users__user FOREIGN KEY(user_id) REFERENCES users(id)
+    CONSTRAINT FK__telegram_users__user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 INSERT INTO telegram_users (user_id, telegram_id)

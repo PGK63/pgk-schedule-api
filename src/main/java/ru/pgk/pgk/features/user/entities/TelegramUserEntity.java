@@ -3,9 +3,11 @@ package ru.pgk.pgk.features.user.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Entity(name = "telegram_users")
-public class TelegramUserEntity {
+public class TelegramUserEntity implements Serializable {
 
     @Id
     private Integer userId;

@@ -14,7 +14,7 @@ CREATE TABLE teacher_users
     teacher_id integer not null,
 
     CONSTRAINT PK__teacher_users__key PRIMARY KEY(user_id),
-    CONSTRAINT FK__teacher_users__user FOREIGN KEY(user_id) REFERENCES users(id),
+    CONSTRAINT FK__teacher_users__user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT FK__teacher_users__teacher FOREIGN KEY(teacher_id) REFERENCES teachers(id)
 );
 

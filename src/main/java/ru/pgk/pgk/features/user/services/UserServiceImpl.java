@@ -52,16 +52,17 @@ public class UserServiceImpl implements UserService{
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "UserService::getByTelegramId", key = "#id"),
-                    @CacheEvict(cacheNames = "UserService::existByTelegramId", key = "#id"),
+                    @CacheEvict(cacheNames = "UserService::getById", key = "#result.id"),
                     @CacheEvict(cacheNames = "StudentService::getByTelegramId", key = "#id"),
                     @CacheEvict(cacheNames = "TeacherService::getByTelegramId", key = "#id"),
-                    @CacheEvict(cacheNames = "UserRoleService::getRoleByTelegramId", key = "#id"),
                     @CacheEvict(cacheNames = "ScheduleService::studentGetById", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true)
             }
     )
-    public void deleteByTelegramId(Long id) {
-        userRepository.deleteByTelegramId(id);
+    public UserEntity deleteByTelegramId(Long id) {
+        UserEntity user = getByTelegramId(id);
+        userRepository.delete(user);
+        return user;
     }
 
     @Override
@@ -69,14 +70,16 @@ public class UserServiceImpl implements UserService{
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "UserService::getByAliceId", key = "#id"),
-                    @CacheEvict(cacheNames = "UserService::existByAliceId", key = "#id"),
+                    @CacheEvict(cacheNames = "UserService::getById", key = "#result.id"),
                     @CacheEvict(cacheNames = "StudentService::getByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "TeacherService::getByAliceId", key = "#id"),
                     @CacheEvict(cacheNames = "ScheduleService::studentGetById", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true)
             }
     )
-    public void deleteByAliceId(String id) {
-        userRepository.deleteByAliceId(id);
+    public UserEntity deleteByAliceId(String id) {
+        UserEntity user = getByAliceId(id);
+        userRepository.delete(user);
+        return user;
     }
 }

@@ -45,6 +45,8 @@ public class TeacherUserServiceImpl implements TeacherUserService {
         telegram.setTelegramId(telegramId);
         telegram.setUser(user);
 
+        user.setTelegram(telegram);
+
         TeacherUserEntity teacherUser = new TeacherUserEntity();
         teacherUser.setTeacher(teacher);
         teacherUser.setUser(user);

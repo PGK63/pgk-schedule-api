@@ -3,7 +3,6 @@ package ru.pgk.pgk.features.teacher.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
-import ru.pgk.pgk.features.user.entities.TelegramUserEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -21,7 +20,7 @@ public class TeacherEntity implements Serializable {
     private String middleName;
     private String cabinet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private DepartmentEntity department;
 
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)

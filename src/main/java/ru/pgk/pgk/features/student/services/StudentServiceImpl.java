@@ -67,13 +67,14 @@ public class StudentServiceImpl implements StudentService {
                     @CachePut(cacheNames = "StudentService::getByTelegramId", key = "#telegramId")
             },
             evict = {
-                    @CacheEvict(cacheNames = "UserService::existByTelegramId", key = "#telegramId")
+                    @CacheEvict(cacheNames = "UserService::getById", key = "#result.id")
             }
     )
     public StudentEntity add(Long telegramId, AddStudentParams params) {
         UserEntity user = new UserEntity();
         TelegramUserEntity telegramUser = new TelegramUserEntity();
         telegramUser.setTelegramId(telegramId);
+        telegramUser.setUser(user);
         user.setTelegram(telegramUser);
         return add(user, params);
     }
@@ -86,13 +87,14 @@ public class StudentServiceImpl implements StudentService {
                     @CachePut(cacheNames = "StudentService::getByAliceId", key = "#aliceId")
             },
             evict = {
-                    @CacheEvict(cacheNames = "UserService::existByAliceId", key = "#aliceId")
+                    @CacheEvict(cacheNames = "UserService::getById", key = "#result.id")
             }
     )
     public StudentEntity add(String aliceId, AddStudentParams params) {
         UserEntity user = new UserEntity();
         AliceUserEntity aliceUser = new AliceUserEntity();
         aliceUser.setAliceId(aliceId);
+        aliceUser.setUser(user);
         user.setAlice(aliceUser);
         return add(user, params);
     }

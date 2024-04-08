@@ -21,5 +21,5 @@ CREATE TABLE admins
 
     CONSTRAINT PK__admins__key PRIMARY KEY(user_id),
     CONSTRAINT FK__admins__type FOREIGN KEY(type_id) REFERENCES admin_types(id),
-    CONSTRAINT FK__admins__user FOREIGN KEY(user_id) REFERENCES users(id)
+    CONSTRAINT FK__admins__user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
