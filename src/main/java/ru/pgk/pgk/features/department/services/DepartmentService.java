@@ -12,5 +12,7 @@ public interface DepartmentService {
 
     DepartmentEntity add(String name);
 
+    DepartmentEntity update(Short id, String name);
+
     void deleteById(Short id);
 }

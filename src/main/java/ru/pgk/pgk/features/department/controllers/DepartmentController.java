@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.pgk.pgk.common.exceptions.ForbiddenException;
-import ru.pgk.pgk.features.admin.entities.AdminTypeEntity;
 import ru.pgk.pgk.features.department.dto.DepartmentDto;
 import ru.pgk.pgk.features.department.mappers.DepartmentMapper;
 import ru.pgk.pgk.features.department.services.DepartmentService;
@@ -48,6 +47,24 @@ public class DepartmentController {
             throw new ForbiddenException();
 
         return departmentMapper.toDto(departmentService.add(name));
+    }
+
+    @PutMapping("{id}")
+    @SecurityRequirements(
+            value = {
+                    @SecurityRequirement(name = "bearerAuth"),
+                    @SecurityRequirement(name = "X-API-KEY")
+            }
+    )
+    private DepartmentDto update(
+            @PathVariable Short id,
+            @RequestParam String name,
+            @AuthenticationPrincipal JwtEntity jwtEntity
+    ) {
+        if(jwtEntity == null || jwtEntity.getAdminType() == null)
+            throw new ForbiddenException();
+
+        return departmentMapper.toDto(departmentService.update(id, name));
     }
 
     @DeleteMapping("{id}")

@@ -49,6 +49,18 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Transactional
     @Caching(
+            evict = @CacheEvict(cacheNames = "DepartmentService::getAll", allEntries = true),
+            put = @CachePut(cacheNames = "DepartmentService::getById", key = "#result.id")
+    )
+    public DepartmentEntity update(Short id, String name) {
+        DepartmentEntity department = getById(id);
+        department.setName(name);
+        return departmentRepository.save(department);
+    }
+
+    @Override
+    @Transactional
+    @Caching(
             evict = {
                     @CacheEvict(cacheNames = "DepartmentService::getAll", allEntries = true),
                     @CacheEvict(cacheNames = "DepartmentService::getById", key = "#id")
