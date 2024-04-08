@@ -3,9 +3,9 @@ package ru.pgk.pgk.features.user.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.pgk.pgk.features.user.entities.UserEntity;
+import ru.pgk.pgk.features.user.dto.UserDetailsDto;
+import ru.pgk.pgk.features.user.mappers.UserDetailsMapper;
 import ru.pgk.pgk.features.user.services.UserService;
-import ru.pgk.pgk.features.user.services.role.UserRoleService;
 import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
@@ -15,14 +15,15 @@ import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 public class UserController {
 
     private final UserService userService;
-    private final UserRoleService userRoleService;
 
-    @GetMapping("/role/by-telegram-id/{id}")
+    private final UserDetailsMapper userDetailsMapper;
+
+    @GetMapping("/by-telegram-id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    private UserEntity.Role getRoleByTelegramId(
+    private UserDetailsDto getRoleByTelegramId(
             @PathVariable Long id
     ) {
-        return userRoleService.getRoleByTelegramId(id);
+        return userDetailsMapper.toDto(userService.getByTelegramId(id));
     }
 
     @DeleteMapping("/by-telegram-id/{id}")
