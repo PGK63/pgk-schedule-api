@@ -10,4 +10,5 @@ public interface TeacherUserService {
 
     TeacherUserEntity getByTelegramId(Long telegramId);
 
+    TeacherUserEntity add(Integer teacherId, Long telegramId);
 }

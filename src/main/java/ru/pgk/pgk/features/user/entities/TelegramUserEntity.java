@@ -8,7 +8,7 @@ import lombok.Data;
 public class TelegramUserEntity {
 
     @Id
-    private Integer id;
+    private Integer userId;
 
     private Long telegramId;
 
