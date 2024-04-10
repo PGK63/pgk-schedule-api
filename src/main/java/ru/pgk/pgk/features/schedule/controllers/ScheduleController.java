@@ -35,7 +35,7 @@ public class ScheduleController {
             @PathVariable Integer id,
             @PathVariable("t-id") Long telegramId
     ) {
-        return scheduleService.studentGetById(id, telegramId);
+        return scheduleService.studentGetByTelegramId(id, telegramId);
     }
 
     @GetMapping("{id}/teacher/by-telegram-id/{t-id}")
@@ -43,6 +43,14 @@ public class ScheduleController {
             @PathVariable Integer id,
             @PathVariable("t-id") Long telegramId
     ) {
-        return scheduleService.teacherGetById(id, telegramId);
+        return scheduleService.teacherGetByTelegramId(id, telegramId);
+    }
+
+    @GetMapping("{id}/teacher/{teacher-id}")
+    private ScheduleTeacherResponse getByTeacherId(
+            @PathVariable Integer id,
+            @PathVariable(name = "teacher-id") Integer teacherId
+    ) {
+       return scheduleService.teacherGetByTeacherId(id, teacherId);
     }
 }

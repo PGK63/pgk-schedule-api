@@ -56,7 +56,7 @@ public class TelegramServiceImpl implements TelegramService {
 
         for(TeacherUserEntity teacher : teachers) {
             try {
-                ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher);
+                ScheduleTeacherResponse response = scheduleService.getByTeacher(scheduleId, teacher.getTeacher());
                 sendMessage(teacher.getUser().getTelegram().getTelegramId(), getMessageNewScheduleTeacher(response));
                 System.out.println(teacher.getId());
             }catch (Exception e){

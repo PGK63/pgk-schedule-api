@@ -55,22 +55,4 @@ public class StudentController {
     ) {
         return studentMapper.toDto(studentService.add(id, params));
     }
-
-    @PatchMapping("by-telegram-id/{id}/group-name")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void updateGroupName(
-            @PathVariable Long id,
-            @RequestParam String name
-    ) {
-        studentService.updateGroupName(id, name);
-    }
-
-    @PatchMapping("/by-alice-id/{id}/group-name")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void updateGroupName(
-            @PathVariable String id,
-            @RequestParam String name
-    ) {
-        studentService.updateGroupName(id, name);
-    }
 }

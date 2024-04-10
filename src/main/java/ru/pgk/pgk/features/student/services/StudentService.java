@@ -15,8 +15,4 @@ public interface StudentService {
 
     StudentEntity add(Long telegramId, AddStudentParams params);
     StudentEntity add(String aliceId, AddStudentParams params);
-
-    void updateGroupName(Integer id, String groupName);
-    StudentEntity updateGroupName(Long telegramId, String groupName);
-    void updateGroupName(String aliceId, String groupName);
 }

@@ -9,8 +9,11 @@ import java.util.Optional;
 
 public interface TeacherUserRepository extends JpaRepository<TeacherUserEntity, Integer> {
 
-    @Query("SELECT t FROM teacher_users t WHERE t.teacher.department.id = ?1 AND t.user.telegram != null")
-    List<TeacherUserEntity> findAllByTelegramNotNull(Short departmentId);
+    @Query("SELECT t FROM teacher_users t " +
+            "INNER JOIN t.teacher.departments td " +
+            "WHERE t.user.telegram IS NOT NULL " +
+            "AND td.id = :departmentId")
+    List<TeacherUserEntity> findAllByTelegramNotNullAndDepartmentId(Short departmentId);
 
     @Query("SELECT t FROM teacher_users t WHERE t.user.telegram.telegramId = ?1")
     Optional<TeacherUserEntity> findByTelegramId(Long telegramId);

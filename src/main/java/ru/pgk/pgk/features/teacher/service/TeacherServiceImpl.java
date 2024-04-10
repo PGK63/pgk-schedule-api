@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
-import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.department.services.DepartmentService;
 import ru.pgk.pgk.features.teacher.dto.params.AddOrUpdateTeacherParams;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
@@ -62,11 +61,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     private void setAddOrUpdateTeacherParams(TeacherEntity teacher, AddOrUpdateTeacherParams params) {
-        DepartmentEntity department = departmentService.getById(params.departmentId());
         teacher.setFirstName(params.firstName());
         teacher.setLastName(params.lastName());
         teacher.setMiddleName(params.middleName());
         teacher.setCabinet(params.cabinet());
-        teacher.setDepartment(department);
+        teacher.setDepartments(params.departmentIds().stream().map(departmentService::getById).toList());
     }
 }

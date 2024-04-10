@@ -24,7 +24,7 @@ public class TeacherUserServiceImpl implements TeacherUserService {
     @Override
     @Transactional(readOnly = true)
     public List<TeacherUserEntity> getAllByTelegramNotNull(Short departmentId) {
-        return teacherUserRepository.findAllByTelegramNotNull(departmentId);
+        return teacherUserRepository.findAllByTelegramNotNullAndDepartmentId(departmentId);
     }
 
     @Override

@@ -8,12 +8,11 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
-import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
-import ru.pgk.pgk.features.department.services.DepartmentService;
+import ru.pgk.pgk.features.group.entities.GroupEntity;
+import ru.pgk.pgk.features.group.services.GroupService;
 import ru.pgk.pgk.features.student.dto.params.AddStudentParams;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.student.repositoties.StudentRepository;
-import ru.pgk.pgk.features.student.services.cache.StudentCacheService;
 import ru.pgk.pgk.features.user.entities.AliceUserEntity;
 import ru.pgk.pgk.features.user.entities.TelegramUserEntity;
 import ru.pgk.pgk.features.user.entities.UserEntity;
@@ -24,8 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private final DepartmentService departmentService;
-    private final StudentCacheService studentCacheService;
+    private final GroupService groupService;
 
     private final StudentRepository studentRepository;
 
@@ -101,47 +99,9 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentEntity add(UserEntity user, AddStudentParams params) {
         StudentEntity student = new StudentEntity();
-        DepartmentEntity department = departmentService.getById(params.departmentId());
+        GroupEntity group = groupService.add(params.groupName(), params.departmentId());
         student.setUser(user);
-        student.setGroupName(params.groupName());
-        student.setDepartment(department);
+        student.setGroup(group);
         return studentRepository.save(student);
-    }
-
-    @Override
-    @Transactional
-    public void updateGroupName(Integer id, String groupName) {
-        StudentEntity student = getById(id);
-        updateGroupName(student, groupName);
-    }
-
-    @Override
-    @Transactional
-    public StudentEntity updateGroupName(Long telegramId, String groupName) {
-        StudentEntity student = getByTelegramId(telegramId);
-        updateGroupName(student, groupName);
-        return student;
-    }
-
-    @Override
-    @Transactional
-    public void updateGroupName(String aliceId, String groupName) {
-        StudentEntity student = getByAliceId(aliceId);
-        updateGroupName(student, groupName);
-    }
-
-    public void updateGroupName(StudentEntity student, String groupName) {
-        student.setGroupName(groupName);
-        studentRepository.save(student);
-        clearStudentCache(student);
-    }
-
-    private void clearStudentCache(StudentEntity student) {
-        clearCache(student);
-    }
-
-
-    private void clearCache(StudentEntity student) {
-        studentCacheService.clearCacheById(student);
     }
 }

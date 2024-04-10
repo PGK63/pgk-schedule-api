@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
 
-    @Query("SELECT s FROM student_users s WHERE s.department.id = ?1 and s.user.telegram != null")
+    @Query("SELECT s FROM student_users s WHERE s.group.department.id = ?1 and s.user.telegram != null")
     List<StudentEntity> findAllByDepartmentIdAndTelegramNotNull(Short depId);
 
     @Query("SELECT s FROM student_users s WHERE s.user.telegram.telegramId = ?1")

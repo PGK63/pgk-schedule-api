@@ -20,8 +20,13 @@ public class TeacherEntity implements Serializable {
     private String middleName;
     private String cabinet;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private DepartmentEntity department;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "teachers_departments",
+            joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "department_id")
+    )
+    private Collection<DepartmentEntity> departments;
 
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
     private Collection<TeacherUserEntity> teacherUsers;

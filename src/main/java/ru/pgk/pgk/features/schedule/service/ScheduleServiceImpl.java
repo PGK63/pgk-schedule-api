@@ -23,6 +23,7 @@ import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.student.services.StudentService;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
+import ru.pgk.pgk.features.teacher.service.TeacherService;
 import ru.pgk.pgk.features.teacher.service.user.TeacherUserService;
 
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final StudentService studentService;
     private final TeacherUserService teacherUserService;
+    private final TeacherService teacherService;
     private final DepartmentService departmentService;
 
     @Override
@@ -51,7 +53,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::studentGetById", key = "#scheduleId-#telegramId")
-    public ScheduleStudentResponse studentGetById(Integer scheduleId, Long telegramId) {
+    public ScheduleStudentResponse studentGetByTelegramId(Integer scheduleId, Long telegramId) {
         StudentEntity student = studentService.getByTelegramId(telegramId);
         return getByStudent(scheduleId, student);
     }
@@ -62,7 +64,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student) {
         ScheduleEntity schedule = getById(scheduleId);
         Optional<ScheduleRow> optionalRow = schedule.getRows().stream()
-                .filter(r -> r.group_name().contains(student.getGroupName())).findFirst();
+                .filter(r -> r.group_name().contains(student.getGroup().getName())).findFirst();
 
         if(optionalRow.isEmpty()) throw new ResourceNotFoundException("Schedule not found");
         ScheduleRow row = optionalRow.get();
@@ -77,20 +79,28 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::teacherGetById", key = "#scheduleId-#telegramId")
-    public ScheduleTeacherResponse teacherGetById(Integer scheduleId, Long telegramId) {
+    public ScheduleTeacherResponse teacherGetByTelegramId(Integer scheduleId, Long telegramId) {
         TeacherUserEntity teacher = teacherUserService.getByTelegramId(telegramId);
+        return getByTeacher(scheduleId, teacher.getTeacher());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "ScheduleService::teacherGetByTeacherId", key = "#scheduleId-#teacherId")
+    public ScheduleTeacherResponse teacherGetByTeacherId(Integer scheduleId, Integer teacherId) {
+        TeacherEntity teacher = teacherService.getById(teacherId);
         return getByTeacher(scheduleId, teacher);
     }
 
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getByTeacher", key = "#scheduleId-#teacher.id")
-    public ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherUserEntity teacher) {
+    public ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherEntity teacher) {
         ScheduleEntity schedule = getById(scheduleId);
         List<ScheduleTeacherRowDto> teacherRows = new ArrayList<>();
 
         for (ScheduleRow row : schedule.getRows()) {
-            List<ScheduleTeacherColumnDto> teacherColumns = getScheduleTeacherColumnDtos(teacher.getTeacher(), row);
+            List<ScheduleTeacherColumnDto> teacherColumns = getScheduleTeacherColumnDtos(teacher, row);
 
             if (!teacherColumns.isEmpty()) {
                 ScheduleTeacherRowDto teacherRow = new ScheduleTeacherRowDto(row.shift(), row.group_name(), teacherColumns);
