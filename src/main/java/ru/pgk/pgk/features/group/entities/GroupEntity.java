@@ -5,11 +5,12 @@ import lombok.Data;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 @Data
 @Entity(name = "groups")
-public class GroupEntity {
+public class GroupEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
