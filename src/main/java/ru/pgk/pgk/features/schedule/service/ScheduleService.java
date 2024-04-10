@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface ScheduleService {
 
-    Page<ScheduleEntity> getAll(Short departmentId, Integer offset);
+    Page<ScheduleEntity> getAll(List<Short> departmentIds, Integer offset);
 
     ScheduleStudentResponse studentGetByTelegramId(Integer scheduleId, Long telegramId);
     ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student);
