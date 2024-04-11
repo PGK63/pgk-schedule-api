@@ -4,19 +4,27 @@ server:
   servlet:
     context-path: /pgk/schedule/v1.1
 spring:
+  config:
+    import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://danbel.ru:5432/pgk-schedule-test
-    username: postgres
-    password: danbelZzAa6190
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DATABASE}?currentSchema=${POSTGRES_SCHEMA}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
   cache:
     type: redis
     cache-names: redis-cache
   data:
     redis:
-      host: danbel.ru
+      host: ${REDIS_HOST}
       port: 6379
-      password: ggtt1234redis
+      password: ${REDIS_PASSWORD}
 jwt:
   secret:
-    access: qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w
-    refresh: zL1HB3Pch05Avfynovxrf/kpF9O2m4NCWKJUjEp27s9J2jEG3ifiKCGyla Z8fDeoONSTJP/wAzKawB8F9rOMNg==
+    access: ${JWT_ACCESS_SECRET}
+    refresh: ${JWT_REFRESH_SECRET}
+bot:
+  telegram:
+    token: ${TELEGRAM_BOT_TOKEN}
+schedule:
+  script:
+    url: ${SCHEDULE_SCRIPT_BASE_URL}
