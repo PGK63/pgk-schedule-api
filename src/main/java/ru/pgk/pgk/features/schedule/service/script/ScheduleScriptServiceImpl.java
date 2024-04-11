@@ -1,10 +1,5 @@
 package ru.pgk.pgk.features.schedule.service.script;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
@@ -12,35 +7,27 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import retrofit2.Call;
+import retrofit2.Response;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.department.services.DepartmentService;
 import ru.pgk.pgk.features.schedule.entities.ScheduleEntity;
 import ru.pgk.pgk.features.schedule.entities.json.Schedule;
 import ru.pgk.pgk.features.schedule.service.ScheduleService;
+import ru.pgk.pgk.features.schedule.service.script.network.ScheduleScriptNetworkService;
 import ru.pgk.pgk.features.telegram.services.TelegramService;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleScriptServiceImpl implements ScheduleScriptService {
 
-    private final String scriptUrl = "https://api.danbel.ru:30/pgk/schedule/script";
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     private final TelegramService telegramService;
     private final DepartmentService departmentService;
     private final ScheduleService scheduleService;
 
-    @PostConstruct
-    private void init() {
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    }
+    private final ScheduleScriptNetworkService scheduleScriptNetworkService;
 
     @Transactional
     @Scheduled(cron = "0 0 16 * * *")
@@ -49,8 +36,7 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
         List<DepartmentEntity> departments = departmentService.getAll();
         for(DepartmentEntity department : departments) {
             try {
-                List<Schedule> schedules = parseJsonScript(true, department.getId());
-                System.out.println(schedules);
+                List<Schedule> schedules = scriptGetSchedules(true, department.getId());
                 for(Schedule schedule : schedules) {
                     ScheduleEntity scheduleEntity = scheduleService.add(schedule, department.getId());
                     telegramService.sendMessageNewSchedule(department.getId(), scheduleEntity.getId());
@@ -74,19 +60,16 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     public void parseJsonUpdateDatabase() {
         List<DepartmentEntity> departments = departmentService.getAll();
         for(DepartmentEntity department : departments) {
-            List<Schedule> schedules = parseJsonScript(false, department.getId());
+            List<Schedule> schedules = scriptGetSchedules(false, department.getId());
             for(Schedule schedule : schedules)
                 scheduleService.updateRowsByDepartmentAndDate(department.getId(), schedule.date(), schedule.rows());
         }
     }
 
     @SneakyThrows
-    private List<Schedule> parseJsonScript(Boolean nextDate, Short departmentId) {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(scriptUrl + "?next_date=" + nextDate + "&department_id=" + departmentId))
-                .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return objectMapper.readValue(response.body(), new TypeReference<>() {});
+    private List<Schedule> scriptGetSchedules(Boolean nextDate, Short departmentId) {
+        Call<List<Schedule>> execute =  scheduleScriptNetworkService.getSchedules(nextDate, departmentId);
+        Response<List<Schedule>> response = execute.execute();
+        return response.body();
     }
 }

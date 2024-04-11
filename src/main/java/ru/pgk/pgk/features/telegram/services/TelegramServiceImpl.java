@@ -12,18 +12,10 @@ import ru.pgk.pgk.features.schedule.entities.json.ScheduleColumn;
 import ru.pgk.pgk.features.schedule.service.ScheduleService;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.student.services.StudentService;
-import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
-import ru.pgk.pgk.features.teacher.service.TeacherService;
 import ru.pgk.pgk.features.teacher.service.user.TeacherUserService;
-import ru.pgk.pgk.features.user.entities.TelegramUserEntity;
+import ru.pgk.pgk.features.telegram.services.network.TelegramNetworkService;
 
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -35,8 +27,9 @@ public class TelegramServiceImpl implements TelegramService {
     private final TeacherUserService teacherUserService;
     private final ScheduleService scheduleService;
 
+    private final TelegramNetworkService telegramNetworkService;
+
     private final DateTimeFormatter pattern = DateTimeFormatter.ofPattern("EE, d MMMM yyyy");
-    private final String telegramUrl = "https://api.telegram.org/bot5884965201:AAFiqkenkv-xVTf7GyzUu9sfwGFt5RumUtE/sendMessage?text=";
 
     @Override
     @Transactional(readOnly = true)
@@ -68,13 +61,7 @@ public class TelegramServiceImpl implements TelegramService {
     @Override
     @SneakyThrows
     public void sendMessage(Long telegramId, String message) {
-        String params = URLEncoder.encode(message, StandardCharsets.UTF_8);
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(telegramUrl + params + "&chat_id=" + telegramId))
-                .build();
-        client.send(request, HttpResponse.BodyHandlers.ofString());
+        telegramNetworkService.sendMessage(message, telegramId);
     }
 
     private String getMessageNewScheduleTeacher(ScheduleTeacherResponse response) {
