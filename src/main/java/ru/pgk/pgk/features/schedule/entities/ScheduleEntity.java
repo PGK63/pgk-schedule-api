@@ -24,6 +24,6 @@ public class ScheduleEntity implements Serializable {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<ScheduleRow> rows;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private DepartmentEntity department;
 }
