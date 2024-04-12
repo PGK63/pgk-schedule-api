@@ -10,10 +10,11 @@ import java.util.List;
 @AllArgsConstructor
 public class PageDto<T> {
     private List<T> content;
+    private Integer totalPage;
     private Boolean last;
     private Boolean first;
 
     public static <T>PageDto<T> fromPage(Page<T> page) {
-        return new PageDto<>(page.getContent(), page.isLast(), page.isFirst());
+        return new PageDto<>(page.getContent(), page.getTotalPages(), page.isLast(), page.isFirst());
     }
 }
