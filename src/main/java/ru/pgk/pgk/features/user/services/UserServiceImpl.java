@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "UserService::getByTelegramId", key = "#id")
     public UserEntity getByTelegramId(Long id) {
-        return userRepository.findByTelegramId(id)
+        return userRepository.findByTelegramIdWithTeacherAndDepartments(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 

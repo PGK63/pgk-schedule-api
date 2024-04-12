@@ -20,7 +20,7 @@ public class TeacherEntity implements Serializable {
     private String middleName;
     private String cabinet;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "teachers_departments",
             joinColumns = @JoinColumn(name = "teacher_id"),
