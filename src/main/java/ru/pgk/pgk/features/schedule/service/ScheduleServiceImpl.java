@@ -1,6 +1,7 @@
 package ru.pgk.pgk.features.schedule.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -43,11 +44,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final TeacherService teacherService;
     private final DepartmentService departmentService;
 
+    @Value("${schedule.page_size}")
+    private Integer schedulePageSize;
+
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", key = "#departmentIds.toString() + '-' + #offset")
     public Page<ScheduleEntity> getAll(List<Short> departmentIds, Integer offset) {
-        return scheduleRepository.findAllByDepartmentIdsOrderByDateDesc(departmentIds, PageRequest.of(offset, 5));
+        return scheduleRepository.findAllByDepartmentIdsOrderByDateDesc(departmentIds, PageRequest.of(offset, schedulePageSize));
     }
 
     @Override

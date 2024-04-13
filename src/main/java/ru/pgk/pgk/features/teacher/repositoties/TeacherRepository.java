@@ -12,8 +12,7 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
             "SELECT teacher FROM teachers teacher " +
                     "WHERE LOWER(teacher.lastName) LIKE %?1% " +
                     "OR LOWER(teacher.firstName) LIKE %?1% OR " +
-                    "LOWER(teacher.middleName) LIKE %?1%" +
-                    "ORDER BY teacher.lastName, teacher.firstName, teacher.middleName"
+                    "LOWER(teacher.middleName) LIKE %?1%"
     )
     Page<TeacherEntity> search(String name, Pageable pageable);
 }

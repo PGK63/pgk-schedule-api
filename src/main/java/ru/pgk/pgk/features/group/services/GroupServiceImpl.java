@@ -1,6 +1,9 @@
 package ru.pgk.pgk.features.group.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
@@ -17,6 +20,15 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     private final DepartmentService departmentService;
+
+    @Value("${base.page_size}")
+    private Integer pageSize;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<GroupEntity> getAll(String name, Integer offset) {
+        return groupRepository.search(name, PageRequest.of(offset, pageSize));
+    }
 
     @Override
     @Transactional
