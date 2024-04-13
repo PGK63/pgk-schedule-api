@@ -51,7 +51,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", key = "#departmentIds.toString() + '-' + #offset")
     public Page<ScheduleEntity> getAll(List<Short> departmentIds, Integer offset) {
-        return scheduleRepository.findAllByDepartmentIdsOrderByDateDesc(departmentIds, PageRequest.of(offset, schedulePageSize));
+        PageRequest pageRequest = PageRequest.of(offset, schedulePageSize);
+
+        if(departmentIds != null)
+            return scheduleRepository.findAllByDepartmentIdsOrderByDateDesc(departmentIds, pageRequest);
+
+        return scheduleRepository.findAll(pageRequest);
     }
 
     @Override
@@ -66,9 +71,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::getByStudent", key = "#scheduleId-#student.id")
     public ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student) {
+        return studentGetByGroupName(scheduleId, student.getGroup().getName());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "ScheduleService::studentGetByGroupName", key = "#scheduleId + '-' + #groupName")
+    public ScheduleStudentResponse studentGetByGroupName(Integer scheduleId, String groupName) {
         ScheduleEntity schedule = getById(scheduleId);
         Optional<ScheduleRow> optionalRow = schedule.getRows().stream()
-                .filter(r -> r.group_name().contains(student.getGroup().getName())).findFirst();
+                .filter(r -> r.group_name().contains(groupName)).findFirst();
 
         if(optionalRow.isEmpty()) throw new ResourceNotFoundException("Schedule not found");
         ScheduleRow row = optionalRow.get();

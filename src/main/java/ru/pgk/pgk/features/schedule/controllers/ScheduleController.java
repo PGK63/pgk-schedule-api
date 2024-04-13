@@ -27,7 +27,7 @@ public class ScheduleController {
 
     @GetMapping
     private PageDto<ScheduleDto> getAll(
-            @RequestParam List<Short> departmentIds,
+            @RequestParam(required = false) List<Short> departmentIds,
             @RequestParam(defaultValue = "0") Integer offset
     ) {
         Page<ScheduleDto> page = scheduleService.getAll(departmentIds, offset).map(scheduleMapper::toDto);
@@ -41,6 +41,14 @@ public class ScheduleController {
     ) {
         Page<ScheduleDto> page = scheduleSearchService.getAllByTeacherId(teacherId, offset).map(scheduleMapper::toDto);
         return PageDto.fromPage(page);
+    }
+
+    @GetMapping("{id}/student/by-group-name/{name}")
+    private ScheduleStudentResponse getByStudentGroupName(
+            @PathVariable Integer id,
+            @PathVariable String name
+    ) {
+        return scheduleService.studentGetByGroupName(id, name);
     }
 
     @GetMapping("{id}/student/by-telegram-id/{t-id}")

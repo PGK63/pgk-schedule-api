@@ -18,6 +18,7 @@ public interface ScheduleService {
 
     ScheduleStudentResponse studentGetByTelegramId(Integer scheduleId, Long telegramId);
     ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student);
+    ScheduleStudentResponse studentGetByGroupName(Integer scheduleId, String groupName);
 
     ScheduleTeacherResponse teacherGetByTelegramId(Integer scheduleId, Long telegramId);
     ScheduleTeacherResponse teacherGetByTeacherId(Integer scheduleId, Integer teacherId);
