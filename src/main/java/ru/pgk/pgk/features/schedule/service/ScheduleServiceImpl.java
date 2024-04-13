@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -49,14 +50,19 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", key = "#departmentIds.toString() + '-' + #offset")
+    @Caching(
+            cacheable = {
+                    @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", condition = "#departmentIds != null", key = "#departmentIds.toString() + '-' + #offset"),
+                    @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", condition = "#departmentIds == null", key = "'0-' + #offset"),
+            }
+    )
     public Page<ScheduleEntity> getAll(List<Short> departmentIds, Integer offset) {
         PageRequest pageRequest = PageRequest.of(offset, schedulePageSize);
 
         if(departmentIds != null)
             return scheduleRepository.findAllByDepartmentIdsOrderByDateDesc(departmentIds, pageRequest);
 
-        return scheduleRepository.findAll(pageRequest);
+        return scheduleRepository.findAllDateDesc(pageRequest);
     }
 
     @Override
