@@ -31,7 +31,12 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
 
     @Transactional
     @Scheduled(cron = "0 0 16 * * *")
-    @CacheEvict(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", allEntries = true)
+            }
+    )
     public void parseJsonAddDatabase() {
         List<DepartmentEntity> departments = departmentService.getAll();
         for(DepartmentEntity department : departments) {

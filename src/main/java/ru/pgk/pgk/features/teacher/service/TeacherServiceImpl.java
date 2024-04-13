@@ -1,6 +1,7 @@
 package ru.pgk.pgk.features.teacher.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -48,6 +49,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", key = "#id.toString() + '-' + '*'")
     public TeacherEntity update(Integer id, AddOrUpdateTeacherParams params) {
         TeacherEntity teacher = getById(id);
         setAddOrUpdateTeacherParams(teacher, params);
@@ -56,6 +58,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", key = "#id.toString() + '-' + '*'")
     public void deleteById(Integer id) {
         teacherRepository.deleteById(id);
     }
