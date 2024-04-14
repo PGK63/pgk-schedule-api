@@ -102,19 +102,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleStudentResponse(
                 schedule.getDate(),
                 row.shift(),
-                replaceCabinet(row.columns())
+                row.columns()
         );
     }
 
     private List<ScheduleColumn> replaceCabinet(List<ScheduleColumn> columns) {
-        return columns.stream().map(r -> {
+        return columns.stream().peek(r -> {
             if (r.getTeacher() == null) {
                 try {
                     TeacherEntity teacher = teacherQueriesService.getByCabinet(r.getCabinet());
                     r.setTeacher(teacher.getFIO());
                 } catch (ResourceNotFoundException ignore) {}
             }
-            return r;
         }).toList();
     }
 
