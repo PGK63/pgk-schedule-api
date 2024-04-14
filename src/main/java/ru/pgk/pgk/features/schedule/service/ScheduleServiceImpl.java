@@ -52,8 +52,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Caching(
             cacheable = {
-                    @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", condition = "#departmentIds != null", key = "#departmentIds.toString() + '-' + #offset"),
-                    @Cacheable(cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset", condition = "#departmentIds == null", key = "'0-' + #offset"),
+                    @Cacheable(
+                            cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset",
+                            condition = "#departmentIds != null",
+                            key = "#departmentIds.toString() + '-' + #offset"
+                    ),
+                    @Cacheable(
+                            cacheNames = "ScheduleService::getAllByDepartmentIdAndOffset",
+                            condition = "#departmentIds == null",
+                            key = "'0-' + #offset"
+                    )
             }
     )
     public Page<ScheduleEntity> getAll(List<Short> departmentIds, Integer offset) {
@@ -94,7 +102,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleStudentResponse(
                 schedule.getDate(),
                 row.shift(),
-                row.columns()
+                row.columns().stream().peek(r -> {
+                    if(r.getTeacher() == null) {
+                        TeacherEntity teacher = teacherService.getByCabinet(r.getCabinet());
+                        r.setTeacher(teacher.getFIO());
+                    }
+                }).toList()
         );
     }
 
@@ -152,15 +165,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleTeacherColumnDto> teacherColumns = new ArrayList<>();
 
         for (ScheduleColumn column : row.columns()) {
-            if((column.teacher() == null && teacher.getCabinet() != null && column.cabinet() != null
-                    && column.cabinet().contains(teacher.getCabinet()))
-                    || (column.teacher() != null
-                    && column.teacher().equals(teacher.getFIO()))
+            if((column.getTeacher() == null && teacher.getCabinet() != null && column.getCabinet() != null
+                    && column.getCabinet().contains(teacher.getCabinet()))
+                    || (column.getTeacher() != null
+                    && column.getTeacher().equals(teacher.getFI()))
             ) {
                 ScheduleTeacherColumnDto teacherColumn = new ScheduleTeacherColumnDto(
-                        column.number(),
-                        column.cabinet(),
-                        column.exam()
+                        column.getNumber(),
+                        column.getCabinet(),
+                        column.getExam()
                 );
                 teacherColumns.add(teacherColumn);
             }

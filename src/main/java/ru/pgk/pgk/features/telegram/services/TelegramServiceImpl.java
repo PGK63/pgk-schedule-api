@@ -81,13 +81,13 @@ public class TelegramServiceImpl implements TelegramService {
     private String getMessageNewScheduleStudent(ScheduleStudentResponse response) {
         StringBuilder message = new StringBuilder(response.date().format(pattern) + " (" + response.shift() + ")");
         for(ScheduleColumn column : response.columns()) {
-            String number = "\n\n🕒 Пара: " + column.number();
-            if(column.exam()) number += " (\uD83D\uDCCCЭкзамен)";
-            String cabinet = "\n\uD83C\uDFE2 Кабинет: " + (column.cabinet() != null ? column.cabinet() : "Не указан");
-            String teacher = "\n\uD83D\uDC64 Преподаватель: " + (column.teacher() != null ? column.teacher() : "Не указан");
+            String number = "\n\n🕒 Пара: " + column.getNumber();
+            if(column.getExam()) number += " (\uD83D\uDCCCЭкзамен)";
+            String cabinet = "\n\uD83C\uDFE2 Кабинет: " + (column.getCabinet() != null ? column.getCabinet() : "Не указан");
+            String teacher = "\n\uD83D\uDC64 Преподаватель: " + (column.getTeacher() != null ? column.getTeacher() : "Не указан");
 
             message.append(number).append(cabinet).append(teacher);
-            if(column.exam()) message.append("\n\uD83D\uDCCC Экзамен");
+            if(column.getExam()) message.append("\n\uD83D\uDCCC Экзамен");
         }
         return message.toString();
     }

@@ -31,7 +31,11 @@ public class TeacherEntity implements Serializable {
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
     private Collection<TeacherUserEntity> teacherUsers;
 
-    public String getFIO() {
+    public String getFI() {
         return lastName + " " + firstName.charAt(0) + ".";
+    }
+
+    public String getFIO() {
+        return lastName + " " + firstName.charAt(0) + "." + " " + lastName.charAt(0) + ".";
     }
 }

@@ -10,6 +10,8 @@ public interface TeacherService {
 
     TeacherEntity getById(Integer id);
 
+    TeacherEntity getByCabinet(String cabinet);
+
     TeacherEntity add(AddOrUpdateTeacherParams params);
 
     TeacherEntity update(Integer id, AddOrUpdateTeacherParams params);

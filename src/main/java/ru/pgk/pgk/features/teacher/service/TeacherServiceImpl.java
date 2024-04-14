@@ -40,6 +40,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public TeacherEntity getByCabinet(String cabinet) {
+        return teacherRepository.findByCabinet(cabinet)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found"));
+    }
+
+    @Override
     @Transactional
     public TeacherEntity add(AddOrUpdateTeacherParams params) {
         TeacherEntity teacher = new TeacherEntity();

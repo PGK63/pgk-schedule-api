@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 
+import java.util.Optional;
+
 public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer> {
 
     @Query(
@@ -15,4 +17,6 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
                     "LOWER(teacher.middleName) LIKE %?1%"
     )
     Page<TeacherEntity> search(String name, Pageable pageable);
+
+    Optional<TeacherEntity> findByCabinet(String cabinet);
 }
