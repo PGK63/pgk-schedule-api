@@ -8,5 +8,5 @@ public interface TeacherService {
 
     TeacherEntity update(Integer id, AddOrUpdateTeacherParams params);
 
-    void deleteById(Integer id);
+    TeacherEntity deleteById(Integer id);
 }

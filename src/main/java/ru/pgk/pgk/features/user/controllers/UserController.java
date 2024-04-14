@@ -7,6 +7,7 @@ import ru.pgk.pgk.features.user.dto.UserDetailsDto;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.mappers.UserDetailsMapper;
 import ru.pgk.pgk.features.user.services.UserService;
+import ru.pgk.pgk.features.user.services.queries.UserQueriesService;
 import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
@@ -16,6 +17,7 @@ import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 public class UserController {
 
     private final UserService userService;
+    private final UserQueriesService userQueriesService;
 
     private final UserDetailsMapper userDetailsMapper;
 
@@ -24,7 +26,7 @@ public class UserController {
     private UserDetailsDto getById(
             @PathVariable Long id
     ) {
-        UserEntity user = userService.getByTelegramId(id);
+        UserEntity user = userQueriesService.getByTelegramId(id);
         return userDetailsMapper.toDto(user);
     }
 

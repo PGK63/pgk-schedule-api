@@ -75,7 +75,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::studentGetById", key = "#scheduleId-#telegramId")
+    @Cacheable(cacheNames = "ScheduleService::studentGetByTelegramId", key = "#scheduleId-#telegramId")
     public ScheduleStudentResponse studentGetByTelegramId(Integer scheduleId, Long telegramId) {
         StudentEntity student = studentService.getByTelegramId(telegramId);
         return getByStudent(scheduleId, student);
@@ -115,7 +115,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::teacherGetById", key = "#scheduleId-#telegramId")
+    @Cacheable(cacheNames = "ScheduleService::teacherGetByTelegramId", key = "#scheduleId-#telegramId")
     public ScheduleTeacherResponse teacherGetByTelegramId(Integer scheduleId, Long telegramId) {
         TeacherUserEntity teacher = teacherUserService.getByTelegramId(telegramId);
         return getByTeacher(scheduleId, teacher.getTeacher());
@@ -150,6 +150,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                     String shift = teacherRow.shift()
                             .toLowerCase()
                             .replace("с ", "")
+                            .replace("1 смена", "1 см")
+                            .replace("2 смена", "2 см")
                             .trim();
                     shift = shift.equals("1 см") ? "8:30" : shift.equals("2 см") ? "13:30" : shift;
                     String[] parts = shift.split(":");

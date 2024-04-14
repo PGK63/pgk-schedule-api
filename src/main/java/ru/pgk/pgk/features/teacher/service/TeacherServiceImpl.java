@@ -49,7 +49,8 @@ public class TeacherServiceImpl implements TeacherService {
             evict = {
                     @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", key = "#id.toString() + '-' + '*'"),
                     @CacheEvict(cacheNames = "TeacherQueriesService::getAllSearchByName", allEntries = true),
-                    @CacheEvict(cacheNames = "TeacherQueriesService::getAll", allEntries = true)
+                    @CacheEvict(cacheNames = "TeacherQueriesService::getAll", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::teacherGetByTeacherId", key = "'*' + '-' + #id")
             }
     )
     public TeacherEntity update(Integer id, AddOrUpdateTeacherParams params) {
@@ -66,11 +67,14 @@ public class TeacherServiceImpl implements TeacherService {
                     @CacheEvict(cacheNames = "TeacherQueriesService::getByCabinet", key = "#result.cabinet"),
                     @CacheEvict(cacheNames = "TeacherQueriesService::getAllSearchByName", allEntries = true),
                     @CacheEvict(cacheNames = "TeacherQueriesService::getAll", allEntries = true),
-                    @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", key = "#id.toString() + '-' + '*'")
+                    @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", key = "#id.toString() + '-' + '*'"),
+                    @CacheEvict(cacheNames = "ScheduleService::teacherGetByTeacherId", key = "'*' + '-' + #id")
             }
     )
-    public void deleteById(Integer id) {
-        teacherRepository.deleteById(id);
+    public TeacherEntity deleteById(Integer id) {
+        TeacherEntity teacher = teacherQueriesService.getById(id);
+        teacherRepository.delete(teacher);
+        return teacher;
     }
 
     private void setAddOrUpdateTeacherParams(TeacherEntity teacher, AddOrUpdateTeacherParams params) {

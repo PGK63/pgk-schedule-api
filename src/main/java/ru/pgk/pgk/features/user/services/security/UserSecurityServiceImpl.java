@@ -9,7 +9,7 @@ import ru.pgk.pgk.common.exceptions.BadRequestException;
 import ru.pgk.pgk.features.user.dto.security.JwtRequestDto;
 import ru.pgk.pgk.features.user.dto.security.JwtResponseDto;
 import ru.pgk.pgk.features.user.entities.UserEntity;
-import ru.pgk.pgk.features.user.services.UserService;
+import ru.pgk.pgk.features.user.services.queries.UserQueriesService;
 import ru.pgk.pgk.security.jwt.JwtTokenProvider;
 
 @Service
@@ -17,14 +17,14 @@ import ru.pgk.pgk.security.jwt.JwtTokenProvider;
 public class UserSecurityServiceImpl implements UserSecurityService {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService;
+    private final UserQueriesService userQueriesService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
     public JwtResponseDto login(JwtRequestDto dto) {
-        UserEntity user = userService.getByUsername(dto.username());
+        UserEntity user = userQueriesService.getByUsername(dto.username());
 
         if(!passwordEncoder.matches(dto.password(), user.getUsernamePassword().getPassword()))
             throw new BadRequestException("Password invalid");
@@ -42,7 +42,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         if(jwtTokenProvider.validateRefreshToken(refreshToken)) {
             Claims claims = jwtTokenProvider.getRefreshClaims(refreshToken);
             final String username = claims.getSubject();
-            UserEntity user = userService.getByUsername(username);
+            UserEntity user = userQueriesService.getByUsername(username);
             return userToJwtEntity(user, jwtTokenProvider.createAccessToken(user), refreshToken);
         }
         throw new BadRequestException("Невалидный JWT токен");

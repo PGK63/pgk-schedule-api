@@ -43,6 +43,7 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
             try {
                 List<Schedule> schedules = scriptGetSchedules(true, department.getId());
                 for(Schedule schedule : schedules) {
+                    System.out.println(schedule);
                     ScheduleEntity scheduleEntity = scheduleService.add(schedule, department.getId());
                     telegramService.sendMessageNewSchedule(department.getId(), scheduleEntity.getId());
                 }
@@ -57,9 +58,10 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "ScheduleService::getByTeacher", allEntries = true),
-                    @CacheEvict(cacheNames = "ScheduleService::teacherGetById", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::teacherGetByTelegramId", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::getByStudent", allEntries = true),
-                    @CacheEvict(cacheNames = "ScheduleService::studentGetById", allEntries = true)
+                    @CacheEvict(cacheNames = "ScheduleService::studentGetByTelegramId", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::teacherGetByTeacherId", allEntries = true),
             }
     )
     public void parseJsonUpdateDatabase() {

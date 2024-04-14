@@ -63,9 +63,6 @@ public class StudentServiceImpl implements StudentService {
             put = {
                     @CachePut(cacheNames = "StudentService::getById", key = "#result.id"),
                     @CachePut(cacheNames = "StudentService::getByTelegramId", key = "#telegramId")
-            },
-            evict = {
-                    @CacheEvict(cacheNames = "UserService::getById", key = "#result.id")
             }
     )
     public StudentEntity add(Long telegramId, AddStudentParams params) {
@@ -83,9 +80,6 @@ public class StudentServiceImpl implements StudentService {
             put = {
                     @CachePut(cacheNames = "StudentService::getById", key = "#result.id"),
                     @CachePut(cacheNames = "StudentService::getByAliceId", key = "#aliceId")
-            },
-            evict = {
-                    @CacheEvict(cacheNames = "UserService::getById", key = "#result.id")
             }
     )
     public StudentEntity add(String aliceId, AddStudentParams params) {
