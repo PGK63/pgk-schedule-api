@@ -25,7 +25,7 @@ import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.student.services.StudentService;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
-import ru.pgk.pgk.features.teacher.service.TeacherService;
+import ru.pgk.pgk.features.teacher.service.queries.TeacherQueriesService;
 import ru.pgk.pgk.features.teacher.service.user.TeacherUserService;
 
 import java.time.LocalDate;
@@ -42,7 +42,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final StudentService studentService;
     private final TeacherUserService teacherUserService;
-    private final TeacherService teacherService;
+    private final TeacherQueriesService teacherQueriesService;
     private final DepartmentService departmentService;
 
     @Value("${schedule.page_size}")
@@ -104,8 +104,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                 row.shift(),
                 row.columns().stream().peek(r -> {
                     if(r.getTeacher() == null) {
-                        TeacherEntity teacher = teacherService.getByCabinet(r.getCabinet());
-                        r.setTeacher(teacher.getFIO());
+                        try {
+                            TeacherEntity teacher = teacherQueriesService.getByCabinet(r.getCabinet());
+                            r.setTeacher(teacher.getFIO());
+                        }catch (ResourceNotFoundException ignore) {}
                     }
                 }).toList()
         );
@@ -123,7 +125,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::teacherGetByTeacherId", key = "#scheduleId-#teacherId")
     public ScheduleTeacherResponse teacherGetByTeacherId(Integer scheduleId, Integer teacherId) {
-        TeacherEntity teacher = teacherService.getById(teacherId);
+        TeacherEntity teacher = teacherQueriesService.getById(teacherId);
         return getByTeacher(scheduleId, teacher);
     }
 

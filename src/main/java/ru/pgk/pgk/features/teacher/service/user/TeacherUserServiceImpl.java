@@ -7,7 +7,7 @@ import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
 import ru.pgk.pgk.features.teacher.repositoties.TeacherUserRepository;
-import ru.pgk.pgk.features.teacher.service.TeacherService;
+import ru.pgk.pgk.features.teacher.service.queries.TeacherQueriesService;
 import ru.pgk.pgk.features.user.entities.TelegramUserEntity;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 
@@ -19,7 +19,7 @@ public class TeacherUserServiceImpl implements TeacherUserService {
 
     private final TeacherUserRepository teacherUserRepository;
 
-    private final TeacherService teacherService;
+    private final TeacherQueriesService teacherQueriesService;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,7 +37,7 @@ public class TeacherUserServiceImpl implements TeacherUserService {
     @Override
     @Transactional
     public TeacherUserEntity add(Integer teacherId, Long telegramId) {
-        TeacherEntity teacher = teacherService.getById(teacherId);
+        TeacherEntity teacher = teacherQueriesService.getById(teacherId);
 
         UserEntity user = new UserEntity();
 

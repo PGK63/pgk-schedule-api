@@ -12,6 +12,7 @@ import ru.pgk.pgk.features.teacher.dto.TeacherDetailsDto;
 import ru.pgk.pgk.features.teacher.dto.params.AddOrUpdateTeacherParams;
 import ru.pgk.pgk.features.teacher.mappers.TeacherDetailsMapper;
 import ru.pgk.pgk.features.teacher.service.TeacherService;
+import ru.pgk.pgk.features.teacher.service.queries.TeacherQueriesService;
 import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 import ru.pgk.pgk.security.jwt.JwtEntity;
 
@@ -22,6 +23,7 @@ import ru.pgk.pgk.security.jwt.JwtEntity;
 public class TeacherController {
 
     private final TeacherService teacherService;
+    private final TeacherQueriesService teacherQueriesService;
 
     private final TeacherDetailsMapper teacherDetailsMapper;
 
@@ -30,7 +32,7 @@ public class TeacherController {
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") Integer offset
     ) {
-        Page<TeacherDetailsDto> teachers = teacherService.getAll(name, offset).map(teacherDetailsMapper::toDto);
+        Page<TeacherDetailsDto> teachers = teacherQueriesService.getAll(name, offset).map(teacherDetailsMapper::toDto);
         return PageDto.fromPage(teachers);
     }
 
