@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByTelegramId(Long telegramId);
 
     @Query("SELECT u FROM users u JOIN FETCH u.teacher t JOIN FETCH t.teacher.departments WHERE u.telegram.telegramId = ?1")
-    Optional<UserEntity> findByTelegramIdWithTeacherAndDepartments( Long id);
+    Optional<UserEntity> findByTelegramIdWithTeacherAndDepartments(Long id);
 
     @Query("SELECT u FROM users u WHERE u.alice.aliceId = ?1")
     Optional<UserEntity> findByAliceId(String aliceId);

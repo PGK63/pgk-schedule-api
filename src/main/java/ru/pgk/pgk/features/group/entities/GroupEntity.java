@@ -18,7 +18,7 @@ public class GroupEntity implements Serializable {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private DepartmentEntity department;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)

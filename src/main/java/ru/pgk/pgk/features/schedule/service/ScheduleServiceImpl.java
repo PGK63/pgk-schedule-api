@@ -75,7 +75,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::studentGetByTelegramId", key = "#scheduleId-#telegramId")
+    @Cacheable(cacheNames = "ScheduleService::studentGetByTelegramId", key = "#scheduleId + '-' + #telegramId")
     public ScheduleStudentResponse studentGetByTelegramId(Integer scheduleId, Long telegramId) {
         StudentEntity student = studentService.getByTelegramId(telegramId);
         return getByStudent(scheduleId, student);
@@ -83,7 +83,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::getByStudent", key = "#scheduleId-#student.id")
+    @Cacheable(cacheNames = "ScheduleService::getByStudent", key = "#scheduleId + '-' + #student.id")
     public ScheduleStudentResponse getByStudent(Integer scheduleId, StudentEntity student) {
         return studentGetByGroupName(scheduleId, student.getGroup().getName());
     }
@@ -102,20 +102,25 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleStudentResponse(
                 schedule.getDate(),
                 row.shift(),
-                row.columns().stream().peek(r -> {
-                    if(r.getTeacher() == null) {
-                        try {
-                            TeacherEntity teacher = teacherQueriesService.getByCabinet(r.getCabinet());
-                            r.setTeacher(teacher.getFIO());
-                        }catch (ResourceNotFoundException ignore) {}
-                    }
-                }).toList()
+                replaceCabinet(row.columns())
         );
+    }
+
+    private List<ScheduleColumn> replaceCabinet(List<ScheduleColumn> columns) {
+        return columns.stream().map(r -> {
+            if (r.getTeacher() == null) {
+                try {
+                    TeacherEntity teacher = teacherQueriesService.getByCabinet(r.getCabinet());
+                    r.setTeacher(teacher.getFIO());
+                } catch (ResourceNotFoundException ignore) {}
+            }
+            return r;
+        }).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::teacherGetByTelegramId", key = "#scheduleId-#telegramId")
+    @Cacheable(cacheNames = "ScheduleService::teacherGetByTelegramId", key = "#scheduleId + '-' + #telegramId")
     public ScheduleTeacherResponse teacherGetByTelegramId(Integer scheduleId, Long telegramId) {
         TeacherUserEntity teacher = teacherUserService.getByTelegramId(telegramId);
         return getByTeacher(scheduleId, teacher.getTeacher());
@@ -123,7 +128,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::teacherGetByTeacherId", key = "#scheduleId-#teacherId")
+    @Cacheable(cacheNames = "ScheduleService::teacherGetByTeacherId", key = "#scheduleId + '-' + #teacherId")
     public ScheduleTeacherResponse teacherGetByTeacherId(Integer scheduleId, Integer teacherId) {
         TeacherEntity teacher = teacherQueriesService.getById(teacherId);
         return getByTeacher(scheduleId, teacher);
@@ -131,7 +136,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ScheduleService::getByTeacher", key = "#scheduleId-#teacher.id")
+    @Cacheable(cacheNames = "ScheduleService::getByTeacher", key = "#scheduleId + '-' + #teacher.id")
     public ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherEntity teacher) {
         ScheduleEntity schedule = getById(scheduleId);
         List<ScheduleTeacherRowDto> teacherRows = new ArrayList<>();
