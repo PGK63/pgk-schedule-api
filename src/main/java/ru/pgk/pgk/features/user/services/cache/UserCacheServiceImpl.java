@@ -15,6 +15,7 @@ public class UserCacheServiceImpl implements UserCacheService {
     @Caching(
             put = {
                     @CachePut(cacheNames = "UserService::getByTelegramId", key = "#user.telegram.telegramId", condition = "#user.telegram != null"),
+                    @CachePut(cacheNames = "UserService::getByAliceId", key = "#user.alice.aliceId", condition = "#user.alice != null"),
                     @CachePut(cacheNames = "UserService::getById", key = "#user.id")
             },
             evict = {
@@ -33,6 +34,7 @@ public class UserCacheServiceImpl implements UserCacheService {
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "UserService::getByTelegramId", key = "#user.telegram.telegramId", condition = "#user.telegram != null"),
+                    @CacheEvict(cacheNames = "UserService::getByAliceId", key = "#user.alice.aliceId", condition = "#user.alice != null"),
                     @CacheEvict(cacheNames = "UserService::getById", key = "#user.id"),
 
                     @CacheEvict(cacheNames = "StudentService::getById", key = "#user.student.id", condition = "#user.student != null"),

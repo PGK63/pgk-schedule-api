@@ -23,10 +23,19 @@ public class UserController {
 
     @GetMapping("/by-telegram-id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    private UserDetailsDto getById(
+    private UserDetailsDto getByTelegramId(
             @PathVariable Long id
     ) {
         UserEntity user = userQueriesService.getByTelegramId(id);
+        return userDetailsMapper.toDto(user);
+    }
+
+    @GetMapping("/by-alice-id/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    private UserDetailsDto getByAliceId(
+            @PathVariable String id
+    ) {
+        UserEntity user = userQueriesService.getByAliceId(id);
         return userDetailsMapper.toDto(user);
     }
 
@@ -44,13 +53,5 @@ public class UserController {
         @PathVariable Long id
     ) {
         userService.deleteByTelegramId(id);
-    }
-
-    @DeleteMapping("/by-alice-id/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void deleteByAliceId(
-            @PathVariable String id
-    ) {
-        userService.deleteByAliceId(id);
     }
 }
