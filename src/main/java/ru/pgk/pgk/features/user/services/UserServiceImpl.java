@@ -3,6 +3,10 @@ package ru.pgk.pgk.features.user.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.pgk.pgk.features.secretKey.entities.SecretKeyEntity;
+import ru.pgk.pgk.features.secretKey.services.SecretKeyService;
+import ru.pgk.pgk.features.secretKey.services.queries.SecretKeyQueriesService;
+import ru.pgk.pgk.features.user.entities.AliceUserEntity;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.repositoties.UserRepository;
 import ru.pgk.pgk.features.user.services.cache.UserCacheService;
@@ -16,6 +20,20 @@ public class UserServiceImpl implements UserService{
 
     private final UserQueriesService userQueriesService;
     private final UserCacheService userCacheService;
+
+    private final SecretKeyQueriesService secretKeyQueriesService;
+    private final SecretKeyService secretKeyService;
+
+    @Override
+    @Transactional
+    public void setAliceBySecretKey(String aliceId, String key) {
+        SecretKeyEntity secretKey = secretKeyQueriesService.getByKey(key);
+        UserEntity user = secretKey.getId().getUser();
+        setAliceUser(user, aliceId);
+        user = userRepository.save(user);
+        secretKeyService.deleteByKey(key);
+        userCacheService.update(user);
+    }
 
     @Override
     @Transactional
@@ -31,5 +49,14 @@ public class UserServiceImpl implements UserService{
         UserEntity user = userQueriesService.getByAliceId(id);
         userRepository.delete(user);
         userCacheService.clearAll(user);
+    }
+
+    private void setAliceUser(UserEntity user, String aliceId) {
+        AliceUserEntity alice = new AliceUserEntity();
+        alice.setAliceId(aliceId);
+        alice.setUser(user);
+        alice.setId(user.getId());
+
+        user.setAlice(alice);
     }
 }

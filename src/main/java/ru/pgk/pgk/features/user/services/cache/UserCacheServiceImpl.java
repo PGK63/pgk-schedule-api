@@ -2,6 +2,7 @@ package ru.pgk.pgk.features.user.services.cache;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import ru.pgk.pgk.features.user.entities.UserEntity;
@@ -9,6 +10,24 @@ import ru.pgk.pgk.features.user.entities.UserEntity;
 @Service
 @RequiredArgsConstructor
 public class UserCacheServiceImpl implements UserCacheService {
+
+    @Override
+    @Caching(
+            put = {
+                    @CachePut(cacheNames = "UserService::getByTelegramId", key = "#user.telegram.telegramId", condition = "#user.telegram != null"),
+                    @CachePut(cacheNames = "UserService::getById", key = "#user.id")
+            },
+            evict = {
+                    @CacheEvict(cacheNames = "StudentService::getById", key = "#user.student.id", condition = "#user.student != null"),
+                    @CacheEvict(cacheNames = "StudentService::getByTelegramId", key = "#user.telegram.telegramId", condition = "#user.telegram != null"),
+                    @CacheEvict(cacheNames = "StudentService::getByAliceId", key = "#user.alice.id", condition = "#user.alice != null"),
+
+                    @CacheEvict(cacheNames = "TeacherUserService::getByTelegramId", key = "#user.telegram.telegramId", condition = "#user.telegram != null")
+            }
+    )
+    public UserEntity update(UserEntity user) {
+        return user;
+    }
 
     @Override
     @Caching(

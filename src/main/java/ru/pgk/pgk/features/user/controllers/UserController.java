@@ -30,6 +30,14 @@ public class UserController {
         return userDetailsMapper.toDto(user);
     }
 
+    @PostMapping("/alice")
+    private void setAliceBySecretKey(
+            @RequestParam String aliceId,
+            @RequestParam String secretKey
+    ) {
+        userService.setAliceBySecretKey(aliceId, secretKey);
+    }
+
     @DeleteMapping("/by-telegram-id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     private void deleteByTelegramId(

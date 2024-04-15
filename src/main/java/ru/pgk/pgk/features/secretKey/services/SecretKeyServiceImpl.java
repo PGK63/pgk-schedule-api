@@ -4,17 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
 import ru.pgk.pgk.features.secretKey.entities.SecretKeyEntity;
 import ru.pgk.pgk.features.secretKey.entities.SecretKeyTypeEntity;
 import ru.pgk.pgk.features.secretKey.repositories.SecretKeyRepository;
+import ru.pgk.pgk.features.secretKey.services.queries.SecretKeyQueriesService;
 import ru.pgk.pgk.features.secretKey.services.type.SecretKeyTypeService;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.services.queries.UserQueriesService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -27,6 +27,7 @@ public class SecretKeyServiceImpl implements SecretKeyService {
 
     private final SecretKeyRepository secretKeyRepository;
 
+    private final SecretKeyQueriesService secretKeyQueriesService;
     private final SecretKeyTypeService secretKeyTypeService;
     private final UserQueriesService userQueriesService;
 
@@ -34,14 +35,6 @@ public class SecretKeyServiceImpl implements SecretKeyService {
 
     private final Random random = new Random();
     private final ScheduledExecutorService schedulerRemoveCode = Executors.newScheduledThreadPool(1);
-
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "SecretKeyService::getByKey", key = "#key")
-    public SecretKeyEntity getByKey(String key) {
-        return secretKeyRepository.findByKey(key)
-                .orElseThrow(() -> new ResourceNotFoundException("Secret key not found"));
-    }
 
     @Override
     @Transactional
@@ -57,16 +50,33 @@ public class SecretKeyServiceImpl implements SecretKeyService {
         Optional<SecretKeyEntity> secretKey = secretKeyRepository.findById(id);
 
         if (secretKey.isPresent()) {
-            return secretKey.get();
+            LocalDateTime currentDate = LocalDateTime.now();
+            LocalDateTime date = secretKey.get().getDate();
+            LocalDateTime tenMinutesAgo = currentDate.minusMinutes(10);
+
+            if (date.isAfter(tenMinutesAgo))
+                return secretKey.get();
+
+            removeKey(secretKey.get());
         }
 
-        SecretKeyEntity newSecretKey = new SecretKeyEntity();
-        newSecretKey.setKey(generateKey());
-        newSecretKey.setId(id);
+        return creatKey(id);
+    }
 
-        schedulerRemoveCode.schedule(() -> removeKey(newSecretKey), 10, TimeUnit.MINUTES);
+    @Override
+    public void deleteByKey(String key) {
+        SecretKeyEntity secretKey = secretKeyQueriesService.getByKey(key);
+        removeKey(secretKey);
+    }
 
-        return secretKeyRepository.save(newSecretKey);
+    private SecretKeyEntity creatKey(SecretKeyEntity.Id id) {
+        SecretKeyEntity secretKey = new SecretKeyEntity();
+        secretKey.setKey(generateKey());
+        secretKey.setId(id);
+
+        schedulerRemoveCode.schedule(() -> removeKey(secretKey), 10, TimeUnit.MINUTES);
+
+        return secretKeyRepository.save(secretKey);
     }
 
     private void removeKey(SecretKeyEntity secretKey) {
