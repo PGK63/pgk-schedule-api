@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 import ru.pgk.pgk.features.admin.entities.AdminEntity;
 import ru.pgk.pgk.features.admin.entities.AdminTypeEntity;
+import ru.pgk.pgk.features.secretKey.entities.SecretKeyEntity;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 @Data
 @Entity(name = "users")
@@ -34,6 +36,9 @@ public class UserEntity implements Serializable {
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UsernamePasswordEntity usernamePassword;
+
+    @OneToMany(mappedBy = "id.user", fetch = FetchType.LAZY)
+    private Collection<SecretKeyEntity> secretKeys;
 
     public Role getRole() {
         if(teacher != null)
