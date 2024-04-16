@@ -6,6 +6,7 @@ import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity(name = "teachers")
@@ -37,5 +38,17 @@ public class TeacherEntity implements Serializable {
 
     public String getFIO() {
         return lastName + " " + firstName.charAt(0) + "." + " " + lastName.charAt(0) + ".";
+    }
+
+    public String getDepartmentName() {
+        StringBuilder name = new StringBuilder();
+        List<DepartmentEntity> departments = this.departments.stream().toList();
+        for (int i = 0; i < departments.size(); i++) {
+            name.append(departments.get(i).getName());
+            if (i < departments.size() - 1) {
+                name.append(", ");
+            }
+        }
+        return name.toString();
     }
 }
