@@ -62,6 +62,8 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
                     @CacheEvict(cacheNames = "ScheduleService::getByStudent", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::studentGetByTelegramId", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleService::teacherGetByTeacherId", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::studentGetByAliceId", allEntries = true),
+                    @CacheEvict(cacheNames = "ScheduleService::teacherGetByAliceId", allEntries = true),
             }
     )
     public void parseJsonUpdateDatabase() {

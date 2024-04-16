@@ -17,4 +17,7 @@ public interface TeacherUserRepository extends JpaRepository<TeacherUserEntity, 
 
     @Query("SELECT t FROM teacher_users t WHERE t.user.telegram.telegramId = ?1")
     Optional<TeacherUserEntity> findByTelegramId(Long telegramId);
+
+    @Query("SELECT t FROM teacher_users t WHERE t.user.alice.aliceId = ?1")
+    Optional<TeacherUserEntity> findByAliceId(String aliceId);
 }

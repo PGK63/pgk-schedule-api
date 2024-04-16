@@ -19,4 +19,10 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Intege
     Page<ScheduleEntity> findAllDateDesc(Pageable pageable);
 
     Optional<ScheduleEntity> findByDepartmentIdAndDate(Short departmentId, LocalDate date);
+
+    @Query("SELECT s FROM schedules s WHERE s.department.id IN :departmentIds AND s.date > :date ORDER BY s.date DESC")
+    Optional<ScheduleEntity> findByNextDateAndDepartmentIds(LocalDate date, List<Short> departmentIds);
+
+    @Query("SELECT s FROM schedules s WHERE s.department.id IN :departmentIds AND s.date = :date")
+    Optional<ScheduleEntity> findByDateAndDepartmentIds(LocalDate date, List<Short> departmentIds);
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.department.services.DepartmentService;
+import ru.pgk.pgk.features.schedule.dto.params.GetScheduleType;
 import ru.pgk.pgk.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherColumnDto;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
@@ -75,10 +76,36 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional(readOnly = true)
+    public ScheduleEntity getByType(GetScheduleType type, List<Short> departmentIds) {
+        LocalDate date = LocalDate.now();
+        Optional<ScheduleEntity> schedule;
+
+        if(type == GetScheduleType.TODAY) {
+            schedule = scheduleRepository.findByDateAndDepartmentIds(date, departmentIds);
+        }else {
+            schedule = scheduleRepository.findByNextDateAndDepartmentIds(date, departmentIds);
+        }
+
+        return schedule.orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::studentGetByTelegramId", key = "#scheduleId + '-' + #telegramId")
     public ScheduleStudentResponse studentGetByTelegramId(Integer scheduleId, Long telegramId) {
         StudentEntity student = studentService.getByTelegramId(telegramId);
         return getByStudent(scheduleId, student);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "ScheduleService::studentGetByAliceId", key = "#aliceId + '-' + #type")
+    public ScheduleStudentResponse studentGetByAliceId(GetScheduleType type, String aliceId) {
+        StudentEntity student = studentService.getByAliceId(aliceId);
+        List<Short> departmentIds = new ArrayList<>();
+        departmentIds.add(student.getGroup().getDepartment().getId());
+        ScheduleEntity schedule = getByType(type, departmentIds);
+        return getByStudent(schedule.getId(), student);
     }
 
     @Override
@@ -123,6 +150,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleTeacherResponse teacherGetByTelegramId(Integer scheduleId, Long telegramId) {
         TeacherUserEntity teacher = teacherUserService.getByTelegramId(telegramId);
         return getByTeacher(scheduleId, teacher.getTeacher());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "ScheduleService::teacherGetByAliceId", key = "#aliceId + '-' + #type")
+    public ScheduleTeacherResponse teacherGetByAliceId(GetScheduleType type, String aliceId) {
+        TeacherUserEntity teacher = teacherUserService.getByAliceId(aliceId);
+        List<Short> departmentIds = teacher.getTeacher().getDepartments().stream().map(DepartmentEntity::getId).toList();
+        ScheduleEntity schedule = getByType(type, departmentIds);
+        return getByTeacher(schedule.getId(), teacher.getTeacher());
     }
 
     @Override

@@ -2,7 +2,9 @@ package ru.pgk.pgk.features.teacher.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pgk.pgk.common.exceptions.ResourceNotFoundException;
@@ -38,8 +40,21 @@ public class TeacherUserServiceImpl implements TeacherUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "TeacherUserService::getByAliceId", key = "#aliceId")
+    public TeacherUserEntity getByAliceId(String aliceId) {
+        return teacherUserRepository.findByAliceId(aliceId)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher user not found"));
+    }
+
+    @Override
     @Transactional
-    @CacheEvict(cacheNames = "TeacherUserService::getByTelegramId", key = "#teacherId")
+    @Caching(
+            put = {
+                    @CachePut(cacheNames = "TeacherUserService::getByTelegramId", key = "#teacherId"),
+                    @CachePut(cacheNames = "TeacherUserService::getByAliceId", key = "#result.user.alice.aliceId", condition = "#result.user.alice != null"),
+            }
+    )
     public TeacherUserEntity add(Integer teacherId, Long telegramId) {
         TeacherEntity teacher = teacherQueriesService.getById(teacherId);
 
