@@ -10,5 +10,5 @@ public record TeacherDetailsDto(
         String lastName,
         String middleName,
         String cabinet,
-        String departmentName
+        List<DepartmentDto> departments
 ) {}
