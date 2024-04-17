@@ -46,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Caching(
             put = {
                     @CachePut(cacheNames = "TeacherQueriesService::getById", key = "#result.id"),
-                    @CachePut(cacheNames = "TeacherQueriesService::getByCabinet", key = "#result.cabinet")
+                    @CachePut(cacheNames = "TeacherQueriesService::getByCabinet", key = "#result.cabinet", condition = "#result.cabinet != null ")
             },
             evict = {
                     @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", key = "#id.toString() + '-' + '*'"),
@@ -66,7 +66,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "TeacherQueriesService::getById", key = "#result.id"),
-                    @CacheEvict(cacheNames = "TeacherQueriesService::getByCabinet", key = "#result.cabinet"),
+                    @CacheEvict(cacheNames = "TeacherQueriesService::getByCabinet", key = "#result.cabinet", condition = "#result.cabinet != null "),
                     @CacheEvict(cacheNames = "TeacherQueriesService::getAllSearchByName", allEntries = true),
                     @CacheEvict(cacheNames = "TeacherQueriesService::getAll", allEntries = true),
                     @CacheEvict(cacheNames = "ScheduleSearchService::getAllByTeacherId", key = "#id.toString() + '-' + '*'"),
