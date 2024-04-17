@@ -1,12 +1,13 @@
 package ru.pgk.pgk.features.teacher.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pgk.pgk.features.department.services.DepartmentService;
+import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.teacher.dto.params.AddOrUpdateTeacherParams;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import ru.pgk.pgk.features.teacher.repositoties.TeacherRepository;
@@ -19,7 +20,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 
     private final TeacherQueriesService teacherQueriesService;
-    private final DepartmentService departmentService;
+
+    private final EntityManager entityManager;
 
     @Override
     @Transactional
@@ -80,8 +82,8 @@ public class TeacherServiceImpl implements TeacherService {
     private void setAddOrUpdateTeacherParams(TeacherEntity teacher, AddOrUpdateTeacherParams params) {
         teacher.setFirstName(params.firstName());
         teacher.setLastName(params.lastName());
-        teacher.setMiddleName(params.middleName());
-        teacher.setCabinet(params.cabinet());
-        teacher.setDepartments(params.departmentIds().stream().map(departmentService::getById).toList());
+        teacher.setMiddleName(params.middleName().isEmpty() ? null : params.middleName());
+        teacher.setCabinet(params.cabinet().isEmpty() ?  null : params.cabinet());
+        teacher.setDepartments(params.departmentIds().stream().map(id -> entityManager.getReference(DepartmentEntity.class, id)).toList());
     }
 }

@@ -44,11 +44,10 @@ public class TeacherController {
             }
     )
     private TeacherDetailsDto add(
-            @RequestBody AddOrUpdateTeacherParams params,
-            @AuthenticationPrincipal JwtEntity jwtEntity
+            @RequestBody AddOrUpdateTeacherParams params
     ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() == null)
-            throw new ForbiddenException();
+//        if(jwtEntity == null || jwtEntity.getAdminType() == null)
+//            throw new ForbiddenException();
 
         return teacherDetailsMapper.toDto(teacherService.add(params));
     }
@@ -62,11 +61,11 @@ public class TeacherController {
     )
     private TeacherDetailsDto update(
             @PathVariable Integer id,
-            @RequestBody AddOrUpdateTeacherParams params,
-            @AuthenticationPrincipal JwtEntity jwtEntity
+            @RequestBody AddOrUpdateTeacherParams params
+//            @AuthenticationPrincipal JwtEntity jwtEntity
     ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() == null)
-            throw new ForbiddenException();
+//        if(jwtEntity == null || jwtEntity.getAdminType() == null)
+//            throw new ForbiddenException();
 
         return teacherDetailsMapper.toDto(teacherService.update(id, params));
     }
