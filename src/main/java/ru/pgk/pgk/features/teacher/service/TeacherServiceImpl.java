@@ -82,8 +82,8 @@ public class TeacherServiceImpl implements TeacherService {
     private void setAddOrUpdateTeacherParams(TeacherEntity teacher, AddOrUpdateTeacherParams params) {
         teacher.setFirstName(params.firstName());
         teacher.setLastName(params.lastName());
-        teacher.setMiddleName(params.middleName().isEmpty() ? null : params.middleName());
-        teacher.setCabinet(params.cabinet().isEmpty() ?  null : params.cabinet());
+        teacher.setMiddleName(params.middleName());
+        teacher.setCabinet(params.cabinet());
         teacher.setDepartments(params.departmentIds().stream().map(id -> entityManager.getReference(DepartmentEntity.class, id)).toList());
     }
 }
