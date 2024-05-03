@@ -6,6 +6,7 @@ import ru.pgk.pgk.features.user.entities.UserEntity;
 
 public record UserDetailsDto(
         Integer id,
+        String aliceId,
         UserEntity.Role role,
         StudentDetailsDto student,
         TeacherDetailsDto teacher

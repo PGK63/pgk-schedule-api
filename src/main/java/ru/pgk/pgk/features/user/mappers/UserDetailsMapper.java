@@ -14,5 +14,6 @@ public interface UserDetailsMapper extends Mappable<UserEntity, UserDetailsDto> 
     @Override
     @Mapping(target = "role", expression = "java(entity.getRole())")
     @Mapping(source = "entity.teacher.teacher", target = "teacher")
+    @Mapping(source = "entity.alice.aliceId", target = "aliceId")
     UserDetailsDto toDto(UserEntity entity);
 }
