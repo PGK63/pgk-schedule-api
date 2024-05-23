@@ -2,8 +2,11 @@ package ru.pgk.pgk.features.telegram.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import okhttp3.ResponseBody;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import retrofit2.Call;
+import retrofit2.Response;
 import ru.pgk.pgk.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherColumnDto;
 import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
@@ -33,7 +36,7 @@ public class TelegramServiceImpl implements TelegramService {
 
     @Override
     @Transactional(readOnly = true)
-    public Boolean sendMessageNewSchedule(Short departmentId, Integer scheduleId) {
+    public void sendMessageNewSchedule(Short departmentId, Integer scheduleId) {
         List<StudentEntity> students = studentService.getAllByTelegramNotNull(departmentId);
         List<TeacherUserEntity> teachers = teacherUserService.getAllByTelegramNotNull(departmentId);
 
@@ -56,14 +59,14 @@ public class TelegramServiceImpl implements TelegramService {
                 System.out.println(e.getMessage());
             }
         }
-        return true;
     }
 
     @Override
     @SneakyThrows
     public Boolean sendMessage(Long telegramId, String message) {
-        telegramNetworkService.sendMessage(message, telegramId);
-        return true;
+        Call<ResponseBody> call = telegramNetworkService.sendMessage(message, telegramId);
+        Response<ResponseBody> response = call.execute();
+        return response.isSuccessful();
     }
 
     private String getMessageNewScheduleTeacher(ScheduleTeacherResponse response) {
