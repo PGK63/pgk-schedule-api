@@ -33,7 +33,7 @@ public class TelegramServiceImpl implements TelegramService {
 
     @Override
     @Transactional(readOnly = true)
-    public void sendMessageNewSchedule(Short departmentId, Integer scheduleId) {
+    public Boolean sendMessageNewSchedule(Short departmentId, Integer scheduleId) {
         List<StudentEntity> students = studentService.getAllByTelegramNotNull(departmentId);
         List<TeacherUserEntity> teachers = teacherUserService.getAllByTelegramNotNull(departmentId);
 
@@ -56,12 +56,14 @@ public class TelegramServiceImpl implements TelegramService {
                 System.out.println(e.getMessage());
             }
         }
+        return true;
     }
 
     @Override
     @SneakyThrows
-    public void sendMessage(Long telegramId, String message) {
+    public Boolean sendMessage(Long telegramId, String message) {
         telegramNetworkService.sendMessage(message, telegramId);
+        return true;
     }
 
     private String getMessageNewScheduleTeacher(ScheduleTeacherResponse response) {

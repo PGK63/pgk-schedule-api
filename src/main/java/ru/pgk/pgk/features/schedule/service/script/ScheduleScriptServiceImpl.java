@@ -43,9 +43,13 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
             try {
                 List<Schedule> schedules = scriptGetSchedules(true, department.getId());
                 for(Schedule schedule : schedules) {
-                    System.out.println(schedule);
-                    ScheduleEntity scheduleEntity = scheduleService.add(schedule, department.getId());
-                    telegramService.sendMessageNewSchedule(department.getId(), scheduleEntity.getId());
+                    try {
+                        System.out.println(schedule);
+                        ScheduleEntity scheduleEntity = scheduleService.add(schedule, department.getId());
+                        telegramService.sendMessageNewSchedule(department.getId(), scheduleEntity.getId());
+                    }catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
             }catch (Exception e) {
                 System.out.println(e.getMessage());
