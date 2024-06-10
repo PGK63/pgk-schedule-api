@@ -82,8 +82,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         if(type == GetScheduleType.TODAY) {
             schedule = scheduleRepository.findByDateAndDepartmentIds(date, departmentIds);
-        }else {
+        }else if(type == GetScheduleType.NEXT_DAY){
             schedule = scheduleRepository.findByNextDateAndDepartmentIds(date, departmentIds);
+        }else {
+            schedule = scheduleRepository.findByLastDate(departmentIds);
         }
 
         return schedule.orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
@@ -246,7 +248,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     @CachePut(cacheNames = "ScheduleService::getById", key = "#result.id")
     public ScheduleEntity updateRowsByDepartmentAndDate(
             Short departmentId,

@@ -25,4 +25,10 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Intege
 
     @Query("SELECT s FROM schedules s WHERE s.department.id IN :departmentIds AND s.date = :date")
     Optional<ScheduleEntity> findByDateAndDepartmentIds(LocalDate date, List<Short> departmentIds);
+
+    @Query(
+            "SELECT s FROM schedules s WHERE s.department.id " +
+                    "IN :departmentIds AND s.date IN(SELECT max(s.date) FROM schedules s)"
+    )
+    Optional<ScheduleEntity> findByLastDate(List<Short> departmentIds);
 }
