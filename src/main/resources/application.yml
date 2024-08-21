@@ -1,9 +1,11 @@
 server:
-  port: 10025
+  port: 0
   forward-headers-strategy: framework
   servlet:
     context-path: /pgk/schedule/v1.1
 spring:
+  application:
+    name: main-service
   config:
     import: optional:file:.env[.properties]
   datasource:
