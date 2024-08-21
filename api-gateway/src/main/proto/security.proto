@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package ru.pgk.auth_service;
+
+option java_multiple_files = true;
+option java_package = "ru.pgk.auth_service.lib";
+option java_outer_classname = "SecurityServiceProto";
+
+import "google/protobuf/wrappers.proto";
+
+service SecurityService {
+  rpc ValidateAccessToken(ValidateAccessTokenRequest) returns(google.protobuf.BoolValue) {}
+}
+
+message ValidateAccessTokenRequest {
+  string access_token = 1;
+  repeated AdminType admin_types = 2;
+  repeated UserRole user_roles = 3;
+}
+
+enum AdminType {
+    FULL = 0;
+    EDUCATION_PART = 1;
+}
+
+enum UserRole {
+  STUDENT = 0;
+  TEACHER = 1;
+}
