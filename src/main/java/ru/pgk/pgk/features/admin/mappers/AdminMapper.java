@@ -10,7 +10,6 @@ import ru.pgk.pgk.features.admin.entities.AdminEntity;
 public interface AdminMapper extends Mappable<AdminEntity, AdminDto> {
 
     @Override
-    @Mapping(source = "entity.user.usernamePassword.username", target = "username")
     @Mapping(source = "entity.userId", target = "id")
     AdminDto toDto(AdminEntity entity);
 }

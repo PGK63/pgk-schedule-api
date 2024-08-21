@@ -25,7 +25,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     public JwtResponseDto login(JwtRequestDto dto) {
         UserEntity user = userQueriesService.getByUsername(dto.username());
 
-        if(!passwordEncoder.matches(dto.password(), user.getUsernamePassword().getPassword()))
+        if(!passwordEncoder.matches(dto.password(), user.getAdmin().getPassword()))
             throw new BadRequestException("Password invalid.");
 
         return userToJwtEntity(

@@ -24,9 +24,6 @@ public class UserEntity implements Serializable {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AdminEntity admin;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private UsernamePasswordEntity usernamePassword;
-
     public Role getRole() {
         if(teacher != null) return Role.TEACHER;
         if(student != null) return Role.STUDENT;

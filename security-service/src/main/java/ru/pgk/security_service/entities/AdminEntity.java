@@ -14,6 +14,9 @@ public class AdminEntity implements Serializable {
     @Id
     private Integer userId;
 
+    private String username;
+    private String password;
+
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserEntity user;

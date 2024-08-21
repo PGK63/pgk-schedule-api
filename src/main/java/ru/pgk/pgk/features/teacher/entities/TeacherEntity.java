@@ -1,14 +1,16 @@
 package ru.pgk.pgk.features.teacher.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "teachers")
 public class TeacherEntity implements Serializable {
 

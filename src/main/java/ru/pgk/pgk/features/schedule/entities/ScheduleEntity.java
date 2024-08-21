@@ -1,7 +1,8 @@
 package ru.pgk.pgk.features.schedule.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
@@ -11,7 +12,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "schedules")
 public class ScheduleEntity implements Serializable {
 

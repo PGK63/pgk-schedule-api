@@ -12,7 +12,6 @@ import ru.pgk.pgk.features.admin.entities.AdminTypeEntity;
 import ru.pgk.pgk.features.admin.repositories.AdminRepository;
 import ru.pgk.pgk.features.admin.services.type.AdminTypeService;
 import ru.pgk.pgk.features.user.entities.UserEntity;
-import ru.pgk.pgk.features.user.entities.UsernamePasswordEntity;
 
 import java.util.List;
 
@@ -42,12 +41,9 @@ public class AdminServiceImpl implements AdminService {
         AdminTypeEntity typeEntity = adminTypeService.getByType(params.type());
         admin.setType(typeEntity);
 
-        UsernamePasswordEntity usernamePassword = new UsernamePasswordEntity();
-        usernamePassword.setUsername(params.username());
-        usernamePassword.setPassword(passwordEncoder.encode(params.password()));
-        usernamePassword.setUser(user);
+        admin.setUsername(params.username());
+        admin.setPassword(passwordEncoder.encode(params.password()));
 
-        user.setUsernamePassword(usernamePassword);
         admin.setUser(user);
 
         return adminRepository.save(admin);

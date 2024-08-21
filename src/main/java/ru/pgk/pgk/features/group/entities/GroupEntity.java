@@ -1,14 +1,16 @@
 package ru.pgk.pgk.features.group.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.pgk.pgk.features.department.entitites.DepartmentEntity;
 import ru.pgk.pgk.features.student.entities.StudentEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "groups")
 public class GroupEntity implements Serializable {
 

@@ -1,12 +1,14 @@
 package ru.pgk.pgk.features.secretKey.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "secret_key_types")
 public class SecretKeyTypeEntity implements Serializable {
 

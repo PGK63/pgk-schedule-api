@@ -1,13 +1,15 @@
 package ru.pgk.pgk.features.secretKey.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.pgk.pgk.features.user.entities.UserEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "secret_keys")
 public class SecretKeyEntity implements Serializable {
 
@@ -17,7 +19,8 @@ public class SecretKeyEntity implements Serializable {
     private String key;
     private LocalDateTime date = LocalDateTime.now();
 
-    @Data
+    @Getter
+    @Setter
     @Embeddable
     public static class Id implements Serializable {
 

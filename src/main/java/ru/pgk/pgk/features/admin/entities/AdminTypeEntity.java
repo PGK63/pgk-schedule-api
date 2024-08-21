@@ -1,12 +1,14 @@
 package ru.pgk.pgk.features.admin.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "admin_types")
 public class AdminTypeEntity implements Serializable {
 

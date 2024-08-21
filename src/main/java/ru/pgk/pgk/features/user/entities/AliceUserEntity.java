@@ -1,11 +1,13 @@
 package ru.pgk.pgk.features.user.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "alice_users")
 public class AliceUserEntity implements Serializable {
 

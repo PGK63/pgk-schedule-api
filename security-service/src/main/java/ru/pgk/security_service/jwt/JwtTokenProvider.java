@@ -32,7 +32,7 @@ public class JwtTokenProvider {
         final Instant accessExpirationInstant = now.plusYears(5).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getUsernamePassword().getUsername())
+                .setSubject(user.getAdmin().getUsername())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
                 .claim("role", user.getRole())
@@ -46,7 +46,7 @@ public class JwtTokenProvider {
         final Instant refreshExpirationInstant = now.plusYears(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getUsernamePassword().getUsername())
+                .setSubject(user.getAdmin().getUsername())
                 .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
                 .compact();

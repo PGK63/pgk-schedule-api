@@ -1,7 +1,8 @@
 package ru.pgk.pgk.features.department.entitites;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.pgk.pgk.features.group.entities.GroupEntity;
 import ru.pgk.pgk.features.schedule.entities.ScheduleEntity;
 import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
@@ -9,7 +10,8 @@ import ru.pgk.pgk.features.teacher.entities.TeacherEntity;
 import java.io.Serializable;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "departments")
 public class DepartmentEntity implements Serializable {
 
