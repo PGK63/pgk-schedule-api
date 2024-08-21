@@ -1,0 +1,32 @@
+package ru.pgk.main_service.features.department.entitites;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import ru.pgk.main_service.features.group.entities.GroupEntity;
+import ru.pgk.main_service.features.schedule.entities.ScheduleEntity;
+import ru.pgk.main_service.features.teacher.entities.TeacherEntity;
+
+import java.io.Serializable;
+import java.util.Collection;
+
+@Getter
+@Setter
+@Entity(name = "departments")
+public class DepartmentEntity implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Short id;
+
+    private String name;
+
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    private Collection<GroupEntity> groups;
+
+    @ManyToMany(mappedBy = "departments", fetch = FetchType.LAZY)
+    private Collection<TeacherEntity> teachers;
+
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    private Collection<ScheduleEntity> schedules;
+}
