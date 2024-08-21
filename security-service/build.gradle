@@ -55,6 +55,9 @@ dependencies {
     implementation "io.grpc:grpc-stub"
     compileOnly 'jakarta.annotation:jakarta.annotation-api:1.3.5'
     implementation("net.devh:grpc-server-spring-boot-starter:3.1.0.RELEASE")
+
+    //Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 }
 
 dependencyManagement {

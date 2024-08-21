@@ -6,8 +6,6 @@ public interface UserQueriesService {
 
     UserEntity getById(Integer id);
 
-    UserEntity getByUsername(String username);
-
     UserEntity getByTelegramId(Long id);
 
     UserEntity getByAliceId(String id);

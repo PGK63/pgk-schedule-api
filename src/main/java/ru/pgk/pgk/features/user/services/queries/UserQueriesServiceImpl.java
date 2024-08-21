@@ -24,13 +24,6 @@ public class UserQueriesServiceImpl implements UserQueriesService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserEntity getByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "UserService::getByTelegramId", key = "#id")
     public UserEntity getByTelegramId(Long id) {
         return userRepository.findByTelegramId(id)

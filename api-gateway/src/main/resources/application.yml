@@ -56,7 +56,19 @@ grpc:
     security:
       address: security-service
       negotiation-type: plaintext
+
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     reactor.netty.http.client: DEBUG
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: Main Service
+        url: /main-service/v3/api-docs
+      - name: Security Service
+        url: /security-service/v3/api-docs

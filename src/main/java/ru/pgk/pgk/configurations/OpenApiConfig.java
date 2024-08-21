@@ -5,9 +5,6 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.security.SecuritySchemes;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import org.springframework.context.annotation.Bean;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -26,11 +23,4 @@ import org.springframework.context.annotation.Bean;
                 )
         }
 )
-public class OpenApiConfig {
-
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList("X-API-KEY"));
-    }
-}
+public class OpenApiConfig {}

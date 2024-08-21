@@ -18,9 +18,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Query("SELECT u FROM users u WHERE u.alice.aliceId = ?1")
     Optional<UserEntity> findByAliceId(String aliceId);
 
-    @Query("SELECT u FROM users u WHERE u.usernamePassword.username = ?1")
-    Optional<UserEntity> findByUsername(String username);
-
     @Modifying
     @Query("DELETE FROM users u WHERE u.telegram.telegramId = ?1")
     void deleteByTelegramId(Long id);
