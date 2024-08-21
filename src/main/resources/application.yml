@@ -20,10 +20,6 @@ spring:
       host: ${REDIS_HOST}
       port: 6379
       password: ${REDIS_PASSWORD}
-jwt:
-  secret:
-    access: ${JWT_ACCESS_SECRET}
-    refresh: ${JWT_REFRESH_SECRET}
 bot:
   telegram:
     token: ${TELEGRAM_BOT_TOKEN}

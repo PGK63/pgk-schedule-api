@@ -10,12 +10,10 @@ import ru.pgk.pgk.common.dto.PageDto;
 import ru.pgk.pgk.features.group.dto.GroupDto;
 import ru.pgk.pgk.features.group.mappers.GroupMapper;
 import ru.pgk.pgk.features.group.services.GroupService;
-import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
 @RequestMapping("groups")
 @RequiredArgsConstructor
-@GlobalSecurityRequirement
 public class GroupController {
 
     private final GroupService groupService;

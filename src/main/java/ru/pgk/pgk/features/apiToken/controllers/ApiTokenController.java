@@ -3,14 +3,10 @@ package ru.pgk.pgk.features.apiToken.controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import ru.pgk.pgk.common.exceptions.ForbiddenException;
-import ru.pgk.pgk.features.admin.entities.AdminTypeEntity;
 import ru.pgk.pgk.features.apiToken.dto.ApiTokenDto;
 import ru.pgk.pgk.features.apiToken.mappers.ApiTokenMapper;
 import ru.pgk.pgk.features.apiToken.services.ApiTokenService;
-import ru.pgk.pgk.security.jwt.JwtEntity;
 
 import java.util.List;
 
@@ -30,34 +26,21 @@ public class ApiTokenController {
     private final ApiTokenMapper apiTokenMapper;
 
     @GetMapping
-    private List<ApiTokenDto> getAll(
-            @AuthenticationPrincipal JwtEntity jwtEntity
-    ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() != AdminTypeEntity.Type.FULL)
-            throw new ForbiddenException();
-
+    private List<ApiTokenDto> getAll() {
         return apiTokenMapper.toDto(apiTokenService.getAll());
     }
 
     @PostMapping
     private ApiTokenDto add(
-            @RequestParam String name,
-            @AuthenticationPrincipal JwtEntity jwtEntity
+            @RequestParam String name
     ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() != AdminTypeEntity.Type.FULL)
-            throw new ForbiddenException();
-
         return apiTokenMapper.toDto(apiTokenService.add(name));
     }
 
     @DeleteMapping("{id}")
     private void deleteById(
-            @PathVariable Integer id,
-            @AuthenticationPrincipal JwtEntity jwtEntity
+            @PathVariable Integer id
     ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() != AdminTypeEntity.Type.FULL)
-            throw new ForbiddenException();
-
         apiTokenService.deleteById(id);
     }
 }

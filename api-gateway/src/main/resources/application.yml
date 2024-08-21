@@ -26,10 +26,13 @@ spring:
         - name: AuthFilter
           args:
             routes:
-              - name: admin-service
+              - name: /main-service/admins
                 adminTypes:
                   - FULL
-              - name: teacher-service
+              - name: /main-service/api-token
+                adminTypes:
+                  - FULL
+              - name: /main-service/teacher-service
                 methods:
                   - POST
                   - PUT
@@ -38,9 +41,19 @@ spring:
                 adminTypes:
                   - EDUCATION_PART
                   - FULL
+              - name: /main-service/departments
+                methods:
+                  - POST
+                  - PUT
+                  - DELETE
+                  - PATCH
+                adminTypes:
+                  - EDUCATION_PART
+                  - FULL
+
 grpc:
   client:
-    auth:
+    security:
       address: security-service
       negotiation-type: plaintext
 logging:

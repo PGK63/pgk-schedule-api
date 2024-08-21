@@ -1,7 +1,6 @@
 package ru.pgk.pgk.configurations;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -24,13 +23,6 @@ import org.springframework.context.annotation.Bean;
                         bearerFormat = "bearerAuth  (http, Bearer)",
                         description = "JWT Authorization header using the Bearer scheme",
                         scheme = "bearer"
-                ),
-                @SecurityScheme(
-                        name = "X-API-KEY",
-                        type = SecuritySchemeType.APIKEY,
-                        in = SecuritySchemeIn.HEADER,
-                        paramName = "X-API-KEY",
-                        description = "API Key в формате UUID (например: 550e8400-e29b-41d4-a716-446655440000)"
                 )
         }
 )

@@ -6,11 +6,9 @@ import ru.pgk.pgk.features.secretKey.dto.SecretKeyDto;
 import ru.pgk.pgk.features.secretKey.entities.SecretKeyTypeEntity;
 import ru.pgk.pgk.features.secretKey.mappers.SecretKeyMapper;
 import ru.pgk.pgk.features.secretKey.services.SecretKeyService;
-import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
 @RequiredArgsConstructor
-@GlobalSecurityRequirement
 @RequestMapping("secret-keys")
 public class SecretKeyController {
 

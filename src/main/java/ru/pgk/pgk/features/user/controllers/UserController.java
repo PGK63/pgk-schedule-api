@@ -8,11 +8,9 @@ import ru.pgk.pgk.features.user.entities.UserEntity;
 import ru.pgk.pgk.features.user.mappers.UserDetailsMapper;
 import ru.pgk.pgk.features.user.services.UserService;
 import ru.pgk.pgk.features.user.services.queries.UserQueriesService;
-import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
 @RequestMapping("users")
-@GlobalSecurityRequirement
 @RequiredArgsConstructor
 public class UserController {
 

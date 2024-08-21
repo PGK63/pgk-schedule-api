@@ -7,12 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.pgk.pgk.features.teacher.entities.TeacherUserEntity;
 import ru.pgk.pgk.features.teacher.service.user.TeacherUserService;
-import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 @RestController
 @RequestMapping("teacher")
 @RequiredArgsConstructor
-@GlobalSecurityRequirement
 public class TeacherUserController {
 
     private final TeacherUserService teacherUserService;

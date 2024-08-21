@@ -4,21 +4,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import ru.pgk.pgk.common.exceptions.ForbiddenException;
 import ru.pgk.pgk.features.department.dto.DepartmentDto;
 import ru.pgk.pgk.features.department.mappers.DepartmentMapper;
 import ru.pgk.pgk.features.department.services.DepartmentService;
-import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
-import ru.pgk.pgk.security.jwt.JwtEntity;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("departments")
 @RequiredArgsConstructor
-@GlobalSecurityRequirement
 public class DepartmentController {
 
     private final DepartmentService departmentService;
@@ -40,12 +35,8 @@ public class DepartmentController {
             }
     )
     private DepartmentDto add(
-            @RequestParam String name,
-            @AuthenticationPrincipal JwtEntity jwtEntity
+            @RequestParam String name
     ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() == null)
-            throw new ForbiddenException();
-
         return departmentMapper.toDto(departmentService.add(name));
     }
 
@@ -58,12 +49,8 @@ public class DepartmentController {
     )
     private DepartmentDto update(
             @PathVariable Short id,
-            @RequestParam String name,
-            @AuthenticationPrincipal JwtEntity jwtEntity
+            @RequestParam String name
     ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() == null)
-            throw new ForbiddenException();
-
         return departmentMapper.toDto(departmentService.update(id, name));
     }
 
@@ -76,12 +63,8 @@ public class DepartmentController {
             }
     )
     private void deleteById(
-            @PathVariable Short id,
-            @AuthenticationPrincipal JwtEntity jwtEntity
+            @PathVariable Short id
     ) {
-        if(jwtEntity == null || jwtEntity.getAdminType() == null)
-            throw new ForbiddenException();
-
         departmentService.deleteById(id);
     }
 }

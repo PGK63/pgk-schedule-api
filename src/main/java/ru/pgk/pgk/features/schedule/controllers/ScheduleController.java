@@ -11,13 +11,11 @@ import ru.pgk.pgk.features.schedule.dto.teacher.ScheduleTeacherResponse;
 import ru.pgk.pgk.features.schedule.mappers.ScheduleMapper;
 import ru.pgk.pgk.features.schedule.service.ScheduleService;
 import ru.pgk.pgk.features.schedule.service.search.ScheduleSearchService;
-import ru.pgk.pgk.security.apiKey.GlobalSecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("schedules")
-@GlobalSecurityRequirement
 @RequiredArgsConstructor
 public class ScheduleController {
 
