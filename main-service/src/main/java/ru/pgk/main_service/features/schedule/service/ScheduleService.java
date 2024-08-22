@@ -5,8 +5,8 @@ import ru.pgk.main_service.features.schedule.dto.params.GetScheduleType;
 import ru.pgk.main_service.features.schedule.dto.student.ScheduleStudentResponse;
 import ru.pgk.main_service.features.schedule.dto.teacher.ScheduleTeacherResponse;
 import ru.pgk.main_service.features.schedule.entities.ScheduleEntity;
-import ru.pgk.main_service.features.schedule.entities.json.Schedule;
-import ru.pgk.main_service.features.schedule.entities.json.ScheduleRow;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleDto;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleRowDto;
 import ru.pgk.main_service.features.student.entities.StudentEntity;
 import ru.pgk.main_service.features.teacher.entities.TeacherEntity;
 
@@ -28,7 +28,7 @@ public interface ScheduleService {
     ScheduleTeacherResponse teacherGetByTeacherId(Integer scheduleId, Integer teacherId);
     ScheduleTeacherResponse getByTeacher(Integer scheduleId, TeacherEntity teacher);
 
-    ScheduleEntity add(Schedule schedule, Short departmentId);
+    ScheduleEntity add(ScheduleDto schedule, Short departmentId);
 
-    ScheduleEntity updateRowsByDepartmentAndDate(Short departmentId, LocalDate date, List<ScheduleRow> rows);
+    ScheduleEntity updateRowsByDepartmentAndDate(Short departmentId, LocalDate date, List<ScheduleRowDto> rows);
 }

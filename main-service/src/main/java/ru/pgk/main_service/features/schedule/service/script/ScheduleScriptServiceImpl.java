@@ -2,20 +2,22 @@ package ru.pgk.main_service.features.schedule.service.script;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import retrofit2.Call;
-import retrofit2.Response;
 import ru.pgk.main_service.features.department.entitites.DepartmentEntity;
 import ru.pgk.main_service.features.department.services.DepartmentService;
 import ru.pgk.main_service.features.schedule.entities.ScheduleEntity;
-import ru.pgk.main_service.features.schedule.entities.json.Schedule;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleDto;
+import ru.pgk.main_service.features.schedule.mappers.grpc.script.ScheduleReplyMapper;
 import ru.pgk.main_service.features.schedule.service.ScheduleService;
-import ru.pgk.main_service.features.schedule.service.script.network.ScheduleScriptNetworkService;
 import ru.pgk.main_service.features.telegram.services.TelegramService;
+import ru.pgk.schedule_service.lib.ScheduleReply;
+import ru.pgk.schedule_service.lib.ScheduleRequest;
+import ru.pgk.schedule_service.lib.ScheduleScriptServiceGrpc;
 
 import java.util.List;
 
@@ -27,8 +29,12 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     private final DepartmentService departmentService;
     private final ScheduleService scheduleService;
 
-    private final ScheduleScriptNetworkService scheduleScriptNetworkService;
+    private final ScheduleReplyMapper scheduleReplyMapper;
 
+    @GrpcClient("schedule-script")
+    private ScheduleScriptServiceGrpc.ScheduleScriptServiceBlockingStub scheduleScriptService;
+
+    @Override
     @Transactional
     @Scheduled(cron = "0 0 16 * * *")
     @Caching(
@@ -41,8 +47,8 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
         List<DepartmentEntity> departments = departmentService.getAll();
         for(DepartmentEntity department : departments) {
             try {
-                List<Schedule> schedules = scriptGetSchedules(true, department.getId());
-                for(Schedule schedule : schedules) {
+                List<ScheduleDto> schedules = scriptGetSchedules(true, department.getId());
+                for(ScheduleDto schedule : schedules) {
                     try {
                         System.out.println(schedule);
                         ScheduleEntity scheduleEntity = scheduleService.add(schedule, department.getId());
@@ -57,6 +63,7 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
         }
     }
 
+    @Override
     @Transactional
     @Scheduled(cron = "0 0 8 * * *")
     @Caching(
@@ -73,16 +80,20 @@ public class ScheduleScriptServiceImpl implements ScheduleScriptService {
     public void parseJsonUpdateDatabase() {
         List<DepartmentEntity> departments = departmentService.getAll();
         for(DepartmentEntity department : departments) {
-            List<Schedule> schedules = scriptGetSchedules(false, department.getId());
-            for(Schedule schedule : schedules)
+            List<ScheduleDto> schedules = scriptGetSchedules(false, department.getId());
+            for(ScheduleDto schedule : schedules)
                 scheduleService.updateRowsByDepartmentAndDate(department.getId(), schedule.date(), schedule.rows());
         }
     }
 
     @SneakyThrows
-    private List<Schedule> scriptGetSchedules(Boolean nextDate, Short departmentId) {
-        Call<List<Schedule>> execute =  scheduleScriptNetworkService.getSchedules(nextDate, departmentId);
-        Response<List<Schedule>> response = execute.execute();
-        return response.body();
+    private List<ScheduleDto> scriptGetSchedules(Boolean nextDate, Short departmentId) {
+        ScheduleRequest request = ScheduleRequest.newBuilder()
+                .setNextDate(nextDate)
+                .setDepartmentId(departmentId)
+                .build();
+
+        List<ScheduleReply> schedulesReply = scheduleScriptService.parseScheduleGoogleSheet(request).getSchedulesList();
+        return scheduleReplyMapper.toDto(schedulesReply);
     }
 }

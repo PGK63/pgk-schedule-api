@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.pgk.main_service.features.department.entitites.DepartmentEntity;
-import ru.pgk.main_service.features.schedule.entities.json.ScheduleRow;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleRowDto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -24,7 +24,7 @@ public class ScheduleEntity implements Serializable {
     private LocalDate date;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<ScheduleRow> rows;
+    private List<ScheduleRowDto> rows;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private DepartmentEntity department;

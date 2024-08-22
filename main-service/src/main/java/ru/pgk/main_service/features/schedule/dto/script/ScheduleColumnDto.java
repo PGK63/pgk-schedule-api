@@ -1,11 +1,11 @@
-package ru.pgk.main_service.features.schedule.entities.json;
+package ru.pgk.main_service.features.schedule.dto.script;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class ScheduleColumn implements Serializable {
+public class ScheduleColumnDto implements Serializable {
 
     private Integer number;
     private String teacher;

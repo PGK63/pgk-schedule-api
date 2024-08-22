@@ -14,4 +14,3 @@ To run this application you need to create `.env` file in root directory with ne
 - `JWT_ACCESS_SECRET` - secret string for access JWT tokens
 - `JWT_REFRESH_SECRET` - secret string for refresh JWT tokens
 - `TELEGRAM_BOT_TOKEN` - telegram bot token
-- `SCHEDULE_SCRIPT_BASE_URL` - schedule script api base url

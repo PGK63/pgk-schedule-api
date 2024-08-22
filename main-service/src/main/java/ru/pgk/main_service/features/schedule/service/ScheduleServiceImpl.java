@@ -18,9 +18,9 @@ import ru.pgk.main_service.features.schedule.dto.teacher.ScheduleTeacherColumnDt
 import ru.pgk.main_service.features.schedule.dto.teacher.ScheduleTeacherResponse;
 import ru.pgk.main_service.features.schedule.dto.teacher.ScheduleTeacherRowDto;
 import ru.pgk.main_service.features.schedule.entities.ScheduleEntity;
-import ru.pgk.main_service.features.schedule.entities.json.Schedule;
-import ru.pgk.main_service.features.schedule.entities.json.ScheduleColumn;
-import ru.pgk.main_service.features.schedule.entities.json.ScheduleRow;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleDto;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleColumnDto;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleRowDto;
 import ru.pgk.main_service.features.schedule.repositories.ScheduleRepository;
 import ru.pgk.main_service.features.student.entities.StudentEntity;
 import ru.pgk.main_service.features.student.services.StudentService;
@@ -122,11 +122,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Cacheable(cacheNames = "ScheduleService::studentGetByGroupName", key = "#scheduleId + '-' + #groupName")
     public ScheduleStudentResponse studentGetByGroupName(Integer scheduleId, String groupName) {
         ScheduleEntity schedule = getById(scheduleId);
-        Optional<ScheduleRow> optionalRow = schedule.getRows().stream()
+        Optional<ScheduleRowDto> optionalRow = schedule.getRows().stream()
                 .filter(r -> r.group_name().contains(groupName)).findFirst();
 
         if(optionalRow.isEmpty()) throw new ResourceNotFoundException("Schedule not found");
-        ScheduleRow row = optionalRow.get();
+        ScheduleRowDto row = optionalRow.get();
 
         return new ScheduleStudentResponse(
                 schedule.getDate(),
@@ -135,7 +135,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
-    private List<ScheduleColumn> replaceCabinet(List<ScheduleColumn> columns) {
+    private List<ScheduleColumnDto> replaceCabinet(List<ScheduleColumnDto> columns) {
         return columns.stream().peek(r -> {
             if (r.getTeacher() == null) {
                 try {
@@ -179,7 +179,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         ScheduleEntity schedule = getById(scheduleId);
         List<ScheduleTeacherRowDto> teacherRows = new ArrayList<>();
 
-        for (ScheduleRow row : schedule.getRows()) {
+        for (ScheduleRowDto row : schedule.getRows()) {
             List<ScheduleTeacherColumnDto> teacherColumns = getScheduleTeacherColumnDtos(teacher, row);
 
             if (!teacherColumns.isEmpty()) {
@@ -208,10 +208,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
-    private static List<ScheduleTeacherColumnDto> getScheduleTeacherColumnDtos(TeacherEntity teacher, ScheduleRow row) {
+    private static List<ScheduleTeacherColumnDto> getScheduleTeacherColumnDtos(TeacherEntity teacher, ScheduleRowDto row) {
         List<ScheduleTeacherColumnDto> teacherColumns = new ArrayList<>();
 
-        for (ScheduleColumn column : row.columns()) {
+        for (ScheduleColumnDto column : row.columns()) {
             if((column.getTeacher() == null && teacher.getCabinet() != null && column.getCabinet() != null
                     && column.getCabinet().contains(teacher.getCabinet()))
                     || (column.getTeacher() != null
@@ -238,7 +238,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Transactional
     @CachePut(cacheNames = "ScheduleService::getById", key = "#result.id")
-    public ScheduleEntity add(Schedule schedule, Short departmentId) {
+    public ScheduleEntity add(ScheduleDto schedule, Short departmentId) {
         DepartmentEntity department = departmentService.getById(departmentId);
         ScheduleEntity scheduleEntity = new ScheduleEntity();
         scheduleEntity.setDate(schedule.date());
@@ -253,7 +253,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleEntity updateRowsByDepartmentAndDate(
             Short departmentId,
             LocalDate date,
-            List<ScheduleRow> rows
+            List<ScheduleRowDto> rows
     ) {
         ScheduleEntity schedule = scheduleRepository.findByDepartmentIdAndDate(departmentId, date)
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));

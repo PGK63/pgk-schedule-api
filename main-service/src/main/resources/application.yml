@@ -22,7 +22,10 @@ bot:
     token: ${TELEGRAM_BOT_TOKEN}
 schedule:
   page_size: 5
-  script:
-    url: ${SCHEDULE_SCRIPT_BASE_URL}
 base:
     page_size: 20
+grpc:
+  client:
+    schedule-script:
+      address: schedule-script-service
+      negotiation-type: plaintext

@@ -11,7 +11,7 @@ import ru.pgk.main_service.features.schedule.dto.student.ScheduleStudentResponse
 import ru.pgk.main_service.features.schedule.dto.teacher.ScheduleTeacherColumnDto;
 import ru.pgk.main_service.features.schedule.dto.teacher.ScheduleTeacherResponse;
 import ru.pgk.main_service.features.schedule.dto.teacher.ScheduleTeacherRowDto;
-import ru.pgk.main_service.features.schedule.entities.json.ScheduleColumn;
+import ru.pgk.main_service.features.schedule.dto.script.ScheduleColumnDto;
 import ru.pgk.main_service.features.schedule.service.ScheduleService;
 import ru.pgk.main_service.features.student.entities.StudentEntity;
 import ru.pgk.main_service.features.student.services.StudentService;
@@ -85,7 +85,7 @@ public class TelegramServiceImpl implements TelegramService {
 
     private String getMessageNewScheduleStudent(ScheduleStudentResponse response) {
         StringBuilder message = new StringBuilder(response.date().format(pattern) + " (" + response.shift() + ")");
-        for(ScheduleColumn column : response.columns()) {
+        for(ScheduleColumnDto column : response.columns()) {
             String number = "\n\n🕒 Пара: " + column.getNumber();
             if(column.getExam()) number += " (\uD83D\uDCCCЭкзамен)";
             String cabinet = "\n\uD83C\uDFE2 Кабинет: " + (column.getCabinet() != null ? column.getCabinet() : "Не указан");

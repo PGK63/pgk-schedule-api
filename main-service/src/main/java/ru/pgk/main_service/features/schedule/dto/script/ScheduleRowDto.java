@@ -1,10 +1,10 @@
-package ru.pgk.main_service.features.schedule.entities.json;
+package ru.pgk.main_service.features.schedule.dto.script;
 
 import java.io.Serializable;
 import java.util.List;
 
-public record ScheduleRow(
+public record ScheduleRowDto(
         String group_name,
         String shift,
-        List<ScheduleColumn> columns
+        List<ScheduleColumnDto> columns
 ) implements Serializable {}
