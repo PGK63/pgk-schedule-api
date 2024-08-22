@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {ScheduleRowReplyMapper.class})
+@Mapper(componentModel = "spring")
 public interface ScheduleReplyMapper {
 
     @Mapping(source = "reply.rowsList", target = "rows", qualifiedByName = "toRowsDto")

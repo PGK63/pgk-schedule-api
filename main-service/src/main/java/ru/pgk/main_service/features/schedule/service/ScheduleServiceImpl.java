@@ -123,7 +123,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleStudentResponse studentGetByGroupName(Integer scheduleId, String groupName) {
         ScheduleEntity schedule = getById(scheduleId);
         Optional<ScheduleRowDto> optionalRow = schedule.getRows().stream()
-                .filter(r -> r.group_name().contains(groupName)).findFirst();
+                .filter(r -> r.groupName().contains(groupName)).findFirst();
 
         if(optionalRow.isEmpty()) throw new ResourceNotFoundException("Schedule not found");
         ScheduleRowDto row = optionalRow.get();
@@ -183,7 +183,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             List<ScheduleTeacherColumnDto> teacherColumns = getScheduleTeacherColumnDtos(teacher, row);
 
             if (!teacherColumns.isEmpty()) {
-                ScheduleTeacherRowDto teacherRow = new ScheduleTeacherRowDto(row.shift(), row.group_name(), teacherColumns);
+                ScheduleTeacherRowDto teacherRow = new ScheduleTeacherRowDto(row.shift(), row.groupName(), teacherColumns);
                 teacherRows.add(teacherRow);
             }
         }

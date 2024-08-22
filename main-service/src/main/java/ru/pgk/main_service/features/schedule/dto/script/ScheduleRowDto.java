@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public record ScheduleRowDto(
-        String group_name,
+        String groupName,
         String shift,
         List<ScheduleColumnDto> columns
 ) implements Serializable {}

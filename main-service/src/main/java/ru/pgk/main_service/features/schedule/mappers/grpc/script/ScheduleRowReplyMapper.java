@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
+import ru.pgk.main_service.common.mapper.StringMapper;
 import ru.pgk.main_service.features.schedule.dto.script.ScheduleColumnDto;
 import ru.pgk.main_service.features.schedule.dto.script.ScheduleRowDto;
 import ru.pgk.schedule_service.lib.ScheduleColumnReply;
@@ -12,11 +13,13 @@ import ru.pgk.schedule_service.lib.ScheduleRowReply;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {ScheduleColumnReplyMapper.class})
+@Mapper(componentModel = "spring", uses = StringMapper.class)
 public interface ScheduleRowReplyMapper {
 
     ScheduleRowReplyMapper INSTANCE = Mappers.getMapper(ScheduleRowReplyMapper.class);
 
+    @Mapping(source = "reply.shift", target = "shift", qualifiedByName = "emptyStringToNull")
+    @Mapping(source = "reply.groupName", target = "groupName", qualifiedByName = "emptyStringToNull")
     @Mapping(source = "reply.columnsList", target = "columns", qualifiedByName = "toColumnsDto")
     ScheduleRowDto toDto(ScheduleRowReply reply);
 
