@@ -1,8 +1,10 @@
 package ru.pgk.main_service.features.teacher.entities;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.pgk.main_service.features.department.entitites.DepartmentEntity;
 
 import java.io.Serializable;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
 @Entity(name = "teachers")
 public class TeacherEntity implements Serializable {
 
@@ -23,6 +27,8 @@ public class TeacherEntity implements Serializable {
     private String middleName;
     private String cabinet;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "teachers_departments",
@@ -31,6 +37,8 @@ public class TeacherEntity implements Serializable {
     )
     private Collection<DepartmentEntity> departments;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
     private Collection<TeacherUserEntity> teacherUsers;
 

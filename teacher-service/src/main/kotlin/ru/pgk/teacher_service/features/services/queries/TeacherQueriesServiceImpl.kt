@@ -1,5 +1,6 @@
 package ru.pgk.teacher_service.features.services.queries
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.cache.annotation.Caching
 import org.springframework.data.domain.Page
@@ -14,21 +15,28 @@ import java.util.*
 
 @Service
 class TeacherQueriesServiceImpl(
-    private val teacherRepository: TeacherRepository
-): TeacherQueriesService {
-
-    private val pageSize = 20
+    private val teacherRepository: TeacherRepository,
+    @Value("\${base.page-size}")
+    private val pageSize: Int
+) : TeacherQueriesService {
 
     @Transactional(readOnly = true)
     @Caching(
-        cacheable = [Cacheable(
-            cacheNames = ["TeacherQueriesService::getAllSearchByName"],
-            condition = "#name != null",
-            key = "#name.toString() + '-' + #offset"
-        ), Cacheable(cacheNames = ["TeacherQueriesService::getAll"], condition = "#name == null", key = "#offset")]
+        cacheable = [
+            Cacheable(
+                cacheNames = ["TeacherQueriesService::getAllSearchByName"],
+                condition = "#name != null",
+                key = "#name.toString() + '-' + #offset"
+            ),
+            Cacheable(
+                cacheNames = ["TeacherQueriesService::getAll"],
+                condition = "#name == null",
+                key = "#offset"
+            )
+        ]
     )
     override fun getAll(name: String?, offset: Int): Page<TeacherEntity> {
-        return if(name.isNullOrEmpty())
+        return if (name.isNullOrEmpty())
             teacherRepository.findAll(
                 PageRequest.of(offset, pageSize, Sort.by("lastName", "firstName", "middleName"))
             )

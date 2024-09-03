@@ -33,7 +33,7 @@ spring:
               - name: /main-service/api-token
                 adminTypes:
                   - FULL
-              - name: /main-service/teacher-service
+              - name: /teacher-service
                 methods:
                   - POST
                   - PUT
@@ -73,3 +73,5 @@ springdoc:
         url: /main-service/v3/api-docs
       - name: Security Service
         url: /security-service/v3/api-docs
+      - name: Teacher Service
+        url: /teacher-service/v3/api-docs

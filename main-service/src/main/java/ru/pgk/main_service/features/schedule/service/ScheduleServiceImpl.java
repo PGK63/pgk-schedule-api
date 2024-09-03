@@ -135,17 +135,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
-    private List<ScheduleColumnDto> replaceCabinet(List<ScheduleColumnDto> columns) {
-        return columns.stream().peek(r -> {
-            if (r.getTeacher() == null) {
-                try {
-                    TeacherEntity teacher = teacherQueriesService.getByCabinet(r.getCabinet());
-                    r.setTeacher(teacher.getFIO());
-                } catch (ResourceNotFoundException ignore) {}
-            }
-        }).toList();
-    }
-
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ScheduleService::teacherGetByTelegramId", key = "#scheduleId + '-' + #telegramId")
