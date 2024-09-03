@@ -1,5 +1,6 @@
 server:
   port: 10765
+  forward-headers-strategy: framework
 spring:
   application:
     name: api-gateway

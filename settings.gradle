@@ -1,3 +1,3 @@
 rootProject.name = 'pgk'
 
-include 'api-gateway', 'eureka-server', 'main-service', 'security-service'
+include 'api-gateway', 'eureka-server', 'main-service', 'security-service', 'teacher-service'
