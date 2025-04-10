@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8081
   forward-headers-strategy: framework
 spring:
   config:
@@ -25,3 +25,8 @@ jwt:
 grpc:
   server:
     port: 0
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://pgk.eureka-server/eureka/

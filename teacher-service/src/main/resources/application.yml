@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8082
   forward-headers-strategy: framework
 spring:
   application:
@@ -20,3 +20,8 @@ spring:
       password: ${REDIS_PASSWORD}
 base:
   page-size: 20
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://pgk.eureka-server/eureka/
