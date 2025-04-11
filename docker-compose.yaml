@@ -1,6 +1,6 @@
 services:
   pgk.api-gateway:
-    image: danbeldev/pgk.api-gateway
+    image: danbeldev/pgk.api-gateway:1.0.0
     restart: "no"
     ports:
       - "10765:10765"
