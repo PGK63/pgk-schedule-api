@@ -1,6 +1,6 @@
 services:
   pgk.api-gateway:
-    image: pgk.api-gateway:latest
+    image: danbeldev/pgk.api-gateway
     build:
       context: api-gateway
       args:
