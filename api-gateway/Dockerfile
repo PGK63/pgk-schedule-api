@@ -1,11 +1,6 @@
-FROM bellsoft/liberica-openjdk-debian:17.0.14 AS builder
-WORKDIR /application
-COPY . .
-RUN --mount=type=cache,target=/root/.gradle  chmod +x gradlew && ./gradlew clean build -x test
-
 FROM bellsoft/liberica-openjre-debian:17.0.14 AS layers
 WORKDIR /application
-COPY --from=builder /application/build/libs/*.jar app.jar
+COPY release/*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
 FROM bellsoft/liberica-openjre-debian:17.0.14
