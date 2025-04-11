@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AmplicodePersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="pgk.main-service.main" name="Default">
+        <packages>
+          <package value="ru.pgk.main_service" />
+        </packages>
+      </persistence-unit>
+      <persistence-unit moduleName="pgk.security-service.main" name="Default">
+        <packages>
+          <package value="ru.pgk.security_service" />
+        </packages>
+      </persistence-unit>
+      <persistence-unit moduleName="pgk.teacher-service.main" name="Default">
+        <packages>
+          <package value="ru.pgk.teacher_service" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>
