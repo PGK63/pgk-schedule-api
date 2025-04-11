@@ -4,6 +4,7 @@ services:
     restart: "no"
     ports:
       - "10765:10765"
+    env_file: .env
   pgk.eureka-server:
     image: pgk.eureka-server:latest
     build:
@@ -13,6 +14,7 @@ services:
     restart: "no"
     ports:
       - "8761:8761"
+    env_file: .env
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:8761/actuator/health || exit 1
       interval: 30s
@@ -28,6 +30,7 @@ services:
     restart: "no"
     ports:
       - "18021:8080"
+    env_file: .env
   pgk.security-service:
     image: pgk.security-service:latest
     build:
@@ -37,6 +40,7 @@ services:
     restart: "no"
     ports:
       - "18021:8081"
+    env_file: .env
   pgk.teacher-service:
     image: pgk.teacher-service:latest
     build:
@@ -46,3 +50,4 @@ services:
     restart: "no"
     ports:
       - "18021:8082"
+    env_file: .env
