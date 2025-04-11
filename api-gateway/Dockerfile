@@ -1,6 +1,6 @@
 FROM bellsoft/liberica-openjre-debian:17.0.14 AS layers
 WORKDIR /application
-COPY release/*.jar app.jar
+COPY release/api-gateway-1.0.0.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
 FROM bellsoft/liberica-openjre-debian:17.0.14
