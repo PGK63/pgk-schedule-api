@@ -33,7 +33,7 @@ services:
         DOCKER_BUILDKIT: 1
     restart: "no"
     ports:
-      - "18021:8081"
+      - "18022:8081"
     env_file: .env
   pgk.teacher-service:
     image: pgk.teacher-service:latest
@@ -43,7 +43,7 @@ services:
         DOCKER_BUILDKIT: 1
     restart: "no"
     ports:
-      - "18021:8082"
+      - "18023:8082"
     env_file: .env
   pgk.api-gateway:
     image: pgk.api-gateway:latest
