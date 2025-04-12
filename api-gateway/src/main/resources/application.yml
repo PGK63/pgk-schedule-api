@@ -79,4 +79,4 @@ springdoc:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://host.docker.internal:8761/eureka/
+      defaultZone: ${EUREKA_URL}
